@@ -1,6 +1,6 @@
 <?php
 require "session_user_utils.php";
-if (!(isset($_SESSION["isAdmin"])))
+if (!(isset($_SESSION["isLogin"])))
 {
   $url = './error-page.php';
   header("location: ".$url); // for two folders
@@ -46,8 +46,12 @@ if (isset($_REQUEST['sessionid']))
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
+		  <?php 
+		  if ((isset($_SESSION["isAdmin"]))) { ?>
             <li class="active"><a href="#">Master</a></li>
-            <li><a href="#">Family</a></li>
+		  <?php } else  { ?>
+            <li class="active"><a href="#">Family</a></li>
+		  <?php } ?>
              <li><a href="logout.php">Logout</a></li>
           </ul>
         </div><!--/.nav-collapse -->

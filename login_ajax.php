@@ -23,16 +23,17 @@ if ((isset($_REQUEST['zproflag']))&&($_REQUEST['zproflag']==710))
       $qryResult['msg'] = "Invalid login credentials";
     $userid = $_REQUEST['username'];
 	$pwd = $_REQUEST['password'];
-      $loginchk = "select rowid,usertype from users where userid=? and password=?";
+      $loginchk = "select rowid,role_link from users where userid=? and password=?";
     $stmt = $conn->prepare($loginchk);
     $stmt->execute([$userid,$pwd]);
     if ($row = $stmt->fetch(PDO::FETCH_NUM, PDO::FETCH_ORI_NEXT)) 
-	{
-			if ($row[1]=="Admin") 
+	{	
+			if ($row[1]==1) 
 			{
 				$qryResult['status'] = 99;
 				$_SESSION["isLogin"]=1;
 				$_SESSION["isAdmin"]=1;
+				$qryResult['msg'] = "Login Success";
 			}
 			else
 			{
@@ -57,6 +58,64 @@ if ((isset($_REQUEST['zproflag']))&&($_REQUEST['zproflag']==710))
     $qryResult['msg'] = "Unable to save, please contact admin".$e;
     echo json_encode($qryResult);
     return;
+  }
+}
+
+if ((isset($_REQUEST['zproflag']))&&($_REQUEST['zproflag']==109091))
+{
+  try
+  {
+	  $qryResult = array();
+      $qryResult['status'] = 1;
+      $qryResult['msg'] = "Failed to save!";
+	  $pName=$_REQUEST['pName'];
+	  $pFName=$_REQUEST['pFName'];
+	  $pDOB=$_REQUEST['pDOB'];
+	  $pMobile=$_REQUEST['pMobile'];
+	  $pDoorNo=$_REQUEST['pDoorNo'];
+	  $pAddLine1=$_REQUEST['pAddLine1'];
+	  $pAddLine2=$_REQUEST['pAddLine2'];
+	  $pAddLine3=$_REQUEST['pAddLine3'];
+	  $pCity=$_REQUEST['pCity'];
+	  $pState = $_REQUEST['pState'];
+	  $pPinCode = $_REQUEST['pPinCode'];
+	  $pAadhar = $_REQUEST['pAadhar'];
+	  $pLanguage = $_REQUEST['pLanguage'];
+	  $pHeight = $_REQUEST['pHeight'];
+	  $pRelation = $_REQUEST['pRelation'];
+	  $masterrowid = $_SESSION["useridref"];
+	  //$pName = $_FILES["image"]["name"];
+	   $updaterow=$_REQUEST['updaterow'];
+	   if ($updaterow>0)
+	   {
+		   $familyreg = "update family set name=?,link_relation_relation=?,fathersname=?,dob=?,mobile=?,doorno=?,addline1=?,addline2=?,addline3=?,city=?,state=?,pincode=?,aaadhar=?,language=?,height=? where rowid=?";
+		$stmt = $conn->prepare($familyreg);
+		$er = $stmt->execute([$pName,$pRelation,$pFName,$pDOB,$pMobile,$pDoorNo,$pAddLine1,$pAddLine2,$pAddLine3,$pCity,$pState,$pPinCode,$pAadhar,$pLanguage,$pHeight,$updaterow]);
+		$qryResult['status'] = 0;
+		$qryResult['msg'] = "Updated Successfully";
+		$_SESSION["savedRow"]=$updaterow;
+	   }
+	   else
+	   {
+		$familyreg = "insert into family (
+		link_master_master,name,link_relation_relation,fathersname,dob,mobile,doorno,addline1,addline2,addline3,city,state,pincode,aaadhar,language,height) 
+		values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		$stmt = $conn->prepare($familyreg);
+		$stmt->execute([$masterrowid,$pName,$pRelation,$pFName,$pDOB,$pMobile,$pDoorNo,$pAddLine1,$pAddLine2,$pAddLine3,$pCity,$pState,$pPinCode,$pAadhar,$pLanguage,$pHeight]);
+		$qryResult['status'] = 0;
+		$qryResult['msg'] = "Saved Successfully";
+		$_SESSION["savedRow"]=$stmt->insert_id;
+		// mov pPhoto
+	   }
+		echo json_encode($qryResult);
+  }
+	
+	catch(PDOException $e) {
+	$qryResult = array();
+	$qryResult['status'] = 1;
+	$qryResult['msg'] = "Unable to save, please contact admin";
+	echo json_encode($qryResult);
+	return;
   }
 }
 
@@ -102,7 +161,7 @@ if ((isset($_REQUEST['zproflag']))&&($_REQUEST['zproflag']==77665))
 			$stmt = $conn->prepare($loginchk);
 			$stmt->execute([$grfno,$sltDept,$pName,$sltRank,$adharNo,$sltStation,$dob,$doj,$doe]);
 			$qryResult['status'] = 0;
-			$qryResult['msg'] = "Saved Successfully".$loginchk;
+			$qryResult['msg'] = "Saved Successfully";
 		}
 	  }
 	  echo json_encode($qryResult);

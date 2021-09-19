@@ -29,7 +29,11 @@ if ($rid==0)
 
    
   </head>
-
+<style>
+.fa {
+	cursor:pointer;
+}
+</style>
   <body>
 
     <!-- Fixed navbar -->
@@ -57,6 +61,10 @@ if ($rid==0)
 
       <!-- Main component for a primary marketing message or call to action -->
       <div class="jumbotron">
+	  <br/>
+	  <span>
+			
+		  </span>
 			<?php
 			 require "connection.php";
           // Create connection
@@ -67,45 +75,74 @@ if ($rid==0)
             // echo "Unable to process your request, contact admin";
             // return;
           }
+		  $totRec=0;
 		   $devCount = "select rowid,name,link_relation_relation from family where link_master_master=?";
           $stmt2 = $conn->prepare($devCount);
           $stmt2->execute([$rid]);
 		  $res1 = $stmt2->fetchAll(PDO::FETCH_ASSOC);
 		  if (count($res1)==0)
 		 {
-			 echo "<center><br><br><br>Family members are not added, please contact your superior</center>";
+			 echo "<center><br><br><br>Family members are not added, <a href='FamilyMember.php'> Click Here </a> to add</center>";
 		 }
 		 else
 		 {
-		  ?>
+			echo "<span id='errormessage1'></span>";
+			if (!(count($res1)>9))
+			{ ?>
+				<div id="printbar" style="float:right"><a href="FamilyMember.php"><button type="button" class="btn btn-primary ">Add</button></a></div>
+			<?php } ?>
+		  		  
 		  <br/>
+		  
 		  <table id="example" class="table table-striped table-bordered" style="width:100%">
 		   <thead>
             <tr>
                 <th>S.No</th>
                 <th>Name</th>
                 <th>Relation</th>
-				<th>Action</th>
+				<th>Edit</th>
+				<th>Other details</th>
             </tr>
 			</thead>
 			 <tbody>
 		  <?php
-		  
+		 
+			
          
 		 
 		  $cnt=0;
           foreach ($res1 as $key => $row2)
           {
 			$cnt=$cnt+1;
-			$rn = mt_rand(111111111111111111,999999999999999999).$row2['rowid'];
+			$rn = mt_rand(11111111,99999999).$row2['rowid'].mt_rand(11111111,99999999);
 			$rel = $row2['link_relation_relation'];
 			/// 
+			// Check if any education details are updated
+				$edu=0;
+				$odqry1 = "select rowid from eduqual where link_family_family=?";
+				$odstmt1 = $conn->prepare($odqry1);
+				$odstmt1->execute([$row2['rowid']]);
+				if ($odrow = $odstmt1->fetch(PDO::FETCH_NUM, PDO::FETCH_ORI_NEXT))
+				{
+					$edu=1;
+				}
+				$ccode0=$ccode1=$ccode2=$ccode3=$ccode4=$ccode5=$ccode6="#CFD3C8";
+				if ($edu==1) $ccode0="#B7E954";
+			
 			$desc="";
 			$relti = "select name from relation where rowid=?";
 			$stmt22 = $conn->prepare($relti);
 			$stmt22->execute([$rel]);
 			$res12 = $stmt22->fetchAll(PDO::FETCH_ASSOC);
-            echo "<tr><td>".$cnt."</td><td>".$row2['name']."</td><td>".$res12[0]['name']."</td><td><center><a href='addEditUser.php?sessionid=".$rn."'><i class='fa fa-pencil' aria-hidden='true'></i></a></center></td></tr>";
+            echo "<tr> <td class='col-md-1'>".$cnt."</td><td class='col-md-4'>".$row2['name']."</td><td class='col-md-2'>".$res12[0]['name']."</td>";
+			echo "<td class='col-md-1'><center><a href='FamilyMember.php?sessionid=".$rn."'><i class='fa fa-pencil' title='Edit Basic details' aria-hidden='true'></i></a></center></td>";
+			echo "<td class='col-md-4'><i class='fa fa-graduation-cap fa-2x' title='Education details' aria-hidden='true' style='color:".$ccode0."'></i>&nbsp;&nbsp;&nbsp;";
+			echo "<i class='fa fa-file-word-o fa-2x' title='Job Experience' aria-hidden='true' style='color:".$ccode1."'></i>&nbsp;&nbsp;&nbsp;";
+			echo "<i class='fa fa-wikipedia-w fa-2x' title='Skill' aria-hidden='true' style='color:".$ccode2."'></i>&nbsp;&nbsp;&nbsp;";
+			echo "<i class='fa fa-thumbs-up fa-2x' title='Awards' aria-hidden='true' style='color:".$ccode3."'></i>&nbsp;&nbsp;&nbsp;";
+			echo "<i class='fa fa-certificate fa-2x' title='Certifications/Licenses' aria-hidden='true' style='color:".$ccode4."'></i>&nbsp;&nbsp;&nbsp;";
+			echo "<i class='fa fa-leanpub fa-2x' title='Projeccts/Paper Presented' aria-hidden='true' style='color:".$ccode5."'>&nbsp;&nbsp;&nbsp;";
+			echo "<i class='fa fa-copyright fa-1x' title='Patent' aria-hidden='true' style='color:".$ccode6."'></i></i></td></tr>";
           }
 		 }
 		  ?>
@@ -128,6 +165,9 @@ if ($rid==0)
 	$(document).ready(function() {
     $('#example').DataTable();
 	} );
+	$('.fa-graduation-cap').on('click', function () {
+		window.location.href="eduDetails.php"
+	});
 	</script>
   </body>
 </html>

@@ -44,7 +44,7 @@ if (!(isset($_SESSION["isAdmin"])))
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
             <li class="active"><a href="#">Master</a></li>
-            <li><a href="#">Family</a></li>
+            <li><a href="FamilyMember.php">Family</a></li>
             <li><a href="logout.php">Logout</a></li>
           </ul>
         </div><!--/.nav-collapse -->
