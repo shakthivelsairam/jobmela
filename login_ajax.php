@@ -104,7 +104,7 @@ if ((isset($_REQUEST['zproflag']))&&($_REQUEST['zproflag']==109091))
 		$stmt->execute([$masterrowid,$pName,$pRelation,$pFName,$pDOB,$pMobile,$pDoorNo,$pAddLine1,$pAddLine2,$pAddLine3,$pCity,$pState,$pPinCode,$pAadhar,$pLanguage,$pHeight]);
 		$qryResult['status'] = 0;
 		$qryResult['msg'] = "Saved Successfully";
-		$_SESSION["savedRow"]=$stmt->insert_id;
+		$_SESSION["savedRow"]=$conn->lastInsertId();
 		// mov pPhoto
 	   }
 		echo json_encode($qryResult);
@@ -118,7 +118,55 @@ if ((isset($_REQUEST['zproflag']))&&($_REQUEST['zproflag']==109091))
 	return;
   }
 }
-
+if ((isset($_REQUEST['zproflag']))&&($_REQUEST['zproflag']==70941))
+{
+	try {
+		$qryResult = array();
+		$qryResult['status'] = 1;
+		$qryResult['msg'] = "Failed to save!";
+		$pEduLevel=$_REQUEST['pEduLevel'];
+		$pFieldStudy=$_REQUEST['pFieldStudy'];
+		$pCollege=$_REQUEST['pCollege'];
+		$pDistrict=$_REQUEST['pDistrict'];
+		$pFromDate=$_REQUEST['pFromDate'];
+		$pToDate=$_REQUEST['pToDate'];
+		$pPursing=$_REQUEST['pPursing'];
+		$totRecs=$_REQUEST['totalRows'];
+		$masterrowid = $_SESSION["useridref"];
+		$familyreg = "delete from education where link_family_family=?";
+		$stmt = $conn->prepare($familyreg);
+		$er = $stmt->execute([$masterrowid]);
+		for ($ij=0;$ij<$totRecs;$ij++)
+		{
+			
+			$rec1 = explode("|",$pEduLevel)[$ij+1];
+			$rec2 = explode("|",$pFieldStudy)[$ij+1];
+			$rec3 = explode("|",$pCollege)[$ij+1];
+			$rec4 = explode("|",$pDistrict)[$ij+1];
+			$rec5 = explode("|",$pFromDate)[$ij+1];
+			$rec6 = explode("|",$pToDate)[$ij+1];
+			$rec7 = 0;	//explode($pPursing,"|")[$ij];
+			$per=7.21;
+			$familyreg = "insert into education (
+			link_family_family,edu_level,field_study,college_univer,district,from_period,to_period,pursing,percentage) 
+			values (?,?,?,?,?,?,?,?,?)";
+			$stmt = $conn->prepare($familyreg);
+			$err=$stmt->execute([$masterrowid,$rec1,$rec2,$rec3,$rec4,$rec5,$rec6,$rec7,$per]);
+		}
+		$qryResult['status'] = 0;
+		$qryResult['msg'] = "Saved Successfully";
+		echo json_encode($qryResult);
+		return;
+		
+	}
+	catch(PDOException $e) {
+		$qryResult = array();
+		$qryResult['status'] = 1;
+		$qryResult['msg'] = "Unable to save, please contact admin".$e;
+		echo json_encode($qryResult);
+		return;
+  }
+}
 if ((isset($_REQUEST['zproflag']))&&($_REQUEST['zproflag']==77665))
 {
   try

@@ -205,11 +205,11 @@ button.btn.active:focus {
 			</div>
 			<div class="col-xs-2 small-txt-box">
 			 <label for="inputCity">Education Level</label>
-			<input type="text" name="pEduLevel" id="pEduLevel" class="form-control" placeholder="Education Level"  />                        
+			<input type="text" name="pEduLevel" id="pEduLevel" class="form-control" placeholder="B.E.,B.A.,M.Sc.,B.Com.,etc"  />                        
 			</div>
 			<div class="col-xs-2 small-txt-box" style="width:20%">
 			<label for="inputCity">Field Of Study</label>
-			<input type="text" name="pFieldStudy" id="pFieldStudy" class="form-control" placeholder="Field Of Study"  />                        
+			<input type="text" name="pFieldStudy" id="pFieldStudy" class="form-control" placeholder="ECE.,Nurshing.,Arts.,etc"  />                        
 			</div>
 			<div class="col-xs-2 small-txt-box">
 			<label for="inputCity">College/University</label>
@@ -227,7 +227,13 @@ button.btn.active:focus {
 			<label for="inputCity">To date</label>
 			<input type="date" name="pToDate" id="pToDate" class="form-control" max="<?php echo date('Y-m-d'); ?>"  placeholder="Last Name"  />                        
 			</div>
-			</br>
+			<div class="col-xs-1 small-txt-box" style="width:5%">
+			<label for="inputCity">Purshing</label>
+			<input type="checkbox" name="pPurshing" style="height:20px;margin-top:8px;width:50%" id="pPurshing"/>                        
+			&nbsp;
+			<img src="https://freepikpsd.com/media/2020/12/delete-symbol-png-7.png" onClick="fDelRow(this)" style="vertical-align: baseline;" height="20px" width="20px">
+			</div>
+			
 			</span>
 		</div>
 		<div class="col-xs-12 add-btn" style="border:0px solid red;float:right;width:5%">
@@ -266,8 +272,44 @@ button.btn.active:focus {
 	<script src="https://cdn.datatables.net/1.11.0/js/dataTables.bootstrap.min.js"></script>
 	
 	<script>
-	var singRow = '</br></br></br>'+$('.singleRow').html();
+	var singRow = $('.removeRow').html();
 	var totRows=0;
+	function fDelRow(obj)
+	{
+		//alert(5)
+		$(obj).parents('.removeRow').remove();
+		///$('.singleRow').find(".removeRow").slice(rowid).remove();
+		
+	}
+	function frowNum(rownum)
+	{
+		var isEmpty=0;
+		var pSno = document.getElementsByName("pSno");
+		var pEduLevel = document.getElementsByName("pEduLevel");
+		var pFieldStudy = document.getElementsByName("pFieldStudy");
+		var pCollege = document.getElementsByName("pCollege");
+		var pDistrict = document.getElementsByName("pDistrict");
+		var pFromDate = document.getElementsByName("pFromDate");
+		var pToDate = document.getElementsByName("pToDate");
+		// First make it black then check 
+		pSno[rownum].style.border="1px solid #ccc";
+		pEduLevel[rownum].style.border="1px solid #ccc"; 
+		pFieldStudy[rownum].style.border="1px solid #ccc";
+		pCollege[rownum].style.border="1px solid #ccc"; 
+		pDistrict[rownum].style.border="1px solid #ccc";
+		pFromDate[rownum].style.border="1px solid #ccc"; 
+		pToDate[rownum].style.border="1px solid #ccc"; 
+		
+		
+		if (pSno[rownum].value=="") { pSno[rownum].style.border="1px solid red"; isEmpty=1; }
+		if (pEduLevel[rownum].value=="") { pEduLevel[rownum].style.border="1px solid red"; isEmpty=1; }
+		if (pFieldStudy[rownum].value=="") { pFieldStudy[rownum].style.border="1px solid red"; isEmpty=1; }
+		if (pCollege[rownum].value=="") { pCollege[rownum].style.border="1px solid red"; isEmpty=1; }
+		if (pDistrict[rownum].value=="") { pDistrict[rownum].style.border="1px solid red"; isEmpty=1; }
+		if (pFromDate[rownum].value=="") { pFromDate[rownum].style.border="1px solid red"; isEmpty=1; }
+		if (pToDate[rownum].value=="") { pToDate[rownum].style.border="1px solid red"; isEmpty=1; }
+		return isEmpty;
+	}
   $(document).ready(function () {
 	  
 	  
@@ -282,116 +324,106 @@ button.btn.active:focus {
 	
 	
 	$('.add-row').on('click',function () {
-		
-		$('.singleRow').append(singRow);
-		var del='<i class="fa fa-minus fa-2x del-row" aria-hidden="true" style="color:red"></i>';
-		$('.singleRow').append(del);
+		var del='';	///'<i class="fa fa-minus fa-2x" onClick="fDelRow('+totRows+')" aria-hidden="true" style="color:red"></i>';
+		singRow1=singRow;
+		//$('.singleRow').append(singRow);
+		varr = $('.singleRow').html();
+		var fistChild="";
+		if (totRows==0) fistChild="<br><br><br><br>";
+		str=varr+fistChild+"<span class='removeRow'>"+singRow+'<br><br><br><br><span>';
+		$(".singleRow").html(str);
+		//$('.singleRow').append(del);
 		totRows=totRows+1;
 		if (totRows==5)
 		{
 			$('.add-btn').css('display','none');
 		}
 	});
-	$('.del-row').on('click', function () {
-		alert('4');
-		
-  	});
+	
 
     // next step
     $('.btn-next').on('click', function () {
 		var ferror=0;
-		
 		var pSno = document.getElementsByName("pSno");
-		var pSno = document.getElementsByName("pSno");
-		var pSno = document.getElementsByName("pSno");
-		var pSno = document.getElementsByName("pSno");
-		var pSno = document.getElementsByName("pSno");
-		
-		// alert(dta.length);
-		
-	$('#pSno').css("border", "1px solid black");
-	$('#pEduLevel').css("border", "1px solid black");
-	$('#pFieldStudy').css("border", "1px solid black");
-	$('#pCollege').css("border", "1px solid black");
-	$('#pDistrict').css("border", "1px solid black");
-	$('#pFromDate').css("border", "1px solid black");
-	$('#pToDate').css("border", "1px solid black");
-
-	
-	// fetch value
-	
-	pSno=$('#pSno').val();
-	pEduLevel=$('#pEduLevel').val();
-	pFieldStudy=$('#pFieldStudy').val();
-	pCollege=$('#pCollege').val();
-	pDistrict=$('#pDistrict').val();
-	pFromDate=$('#pFromDate').val();
-	pToDate=$('#pToDate').val();
-
-
-	if (pSno=="") {  $('#pSno').css("border", "1px solid red"); ferror=1}
-	if (pEduLevel=="") {  $('#pEduLevel').css("border", "1px solid red"); ferror=1}
-	if (pFieldStudy=="") {  $('#pFieldStudy').css("border", "1px solid red"); ferror=1}
-	if (pCollege=="") {  $('#pCollege').css("border", "1px solid red"); ferror=1}
-	if (pDistrict=="") {  $('#pDistrict').css("border", "1px solid red"); ferror=1}
-	if (pFromDate=="") {  $('#pFromDate').css("border", "1px solid red"); ferror=1}
-	if (pToDate=="") {  $('#pToDate').css("border", "1px solid red"); ferror=1}
-	
-	
-	if (ferror) {
-		var x = document.getElementById("snackbar");
-		x.className = "show";
-		$("#snackbar").html('Fill mandatory fields');
-		$("#snackbar").css('background-color','#DF2909');
-		$("#snackbar").css('color','#FFFFFF');
-		setTimeout(function(){ x.className = x.className.replace("show", ""); }, 4000);
-		return false;
-	}
-		
+		var pEduLevel = document.getElementsByName("pEduLevel");
+		var pFieldStudy = document.getElementsByName("pFieldStudy");
+		var pCollege = document.getElementsByName("pCollege");
+		var pDistrict = document.getElementsByName("pDistrict");
+		var pFromDate = document.getElementsByName("pFromDate");
+		var pToDate = document.getElementsByName("pToDate");
+		var totRecs = pSno.length;
+		for (cnt=0;cnt<totRecs;cnt++)
+		{
+			if (frowNum(cnt)) ferror=1;
+		}
+		if (ferror) {
+			var x = document.getElementById("snackbar");
+			x.className = "show";
+			$("#snackbar").html('Fill mandatory fields');
+			$("#snackbar").css('background-color','#DF2909');
+			$("#snackbar").css('color','#FFFFFF');
+			setTimeout(function(){ x.className = x.className.replace("show", ""); }, 4000);
+			return false;
+		}
+		pEduLeveltxt="";
+		pFieldStudytxt="";
+		pCollegetxt="";
+		pDistricttxt="";
+		pFromDatetxt="";
+		pToDatetxt="";
+		for (cnt=0;cnt<totRecs;cnt++)
+		{
+			pEduLeveltxt=pEduLeveltxt+"|"+pEduLevel[cnt].value;
+			pFieldStudytxt=pFieldStudytxt+"|"+pFieldStudy[cnt].value;
+			pCollegetxt=pCollegetxt+"|"+pCollege[cnt].value;
+			pDistricttxt=pDistricttxt+"|"+pDistrict[cnt].value;
+			pFromDatetxt=pFromDatetxt+"|"+pFromDate[cnt].value;
+			pToDatetxt=pToDatetxt+"|"+pToDate[cnt].value;
+		}
+		pPursing="0|0|0|0|0|0";
+		updaterow=0;
 		 $.ajax({
           url : 'login_ajax.php',
           type : 'POST',
           data : {
-			'pEduLevel' : pEduLevel,
-			'pFieldStudy' : pFieldStudy,
-			'pCollege' : pCollege,
-			'pDistrict' : pDistrict,
-			'pFromDate' : pFromDate,
-			'pToDate' : pToDate,
-			'updaterow' : updaterow,
-			'zproflag' : 109091
+			'pEduLevel' : pEduLeveltxt,
+			'pFieldStudy' : pFieldStudytxt,
+			'pCollege' : pCollegetxt,
+			'pDistrict' : pDistricttxt,
+			'pFromDate' : pFromDatetxt,
+			'pToDate' : pToDatetxt,
+			'pPursing' : pPursing,
+			'totalRows' : totRecs,
+			'zproflag' : 70941
           },
           dataType:'json',
           success : function(data) {
-			  
+			  var x = document.getElementById("snackbar");
+				x.className = "show";
+				setTimeout(function(){ x.className = x.className.replace("show", ""); }, 4000);
               if (data['status']==0)
               {
-				  
-				  
-				  //window.location.href="admin.php";
-				  /*
-				$("#errormessage1").css('display', 'block');
-				$("#errormessage1").css('color', 'green');
-                $('#errormessage1').html(data['msg']);
-                $('#errormessage1').delay(6000).fadeOut();
-				*/
+				   $("#snackbar").html('Saved Successfully..!');
+						$("#snackbar").css('background-color','#87C261');
+						$("#snackbar").css('color','#FFFFFF');
               }
               else
               {
-                $("#errormessage1").css('display', 'block');
-				$("#errormessage1").css('color', 'red');
-                $('#errormessage1').html(data['msg']);
-                $('#errormessage1').delay(6000).fadeOut();
+				 $("#snackbar").html('Failed to save..!');
+				$("#snackbar").css('background-color','#DF2909');
+				$("#snackbar").css('color','#FFFFFF');
+    
               }
+			  clearPrompts();
               // clearPrompts();
           },
           error : function(request,error)
           {
 			   
-            $("#errormessage1").css('display', 'block');
-			$("#errormessage1").css('color', 'red');
-            $('#errormessage1').html("Failed to save, please contact admin");
-            $('#errormessage1').delay(6000).fadeOut();
+             $("#snackbar").html('Failed to save..!');
+			$("#snackbar").css('background-color','#DF2909');
+			$("#snackbar").css('color','#FFFFFF');
+			clearPrompts()
           }
       });
 		
@@ -534,6 +566,11 @@ $('.saveUpdate').click(function() {
     //
     return false;
   });
+  function clearPrompts()
+{
+	$('.singleRow').html(singRow);
+		totRows=0;
+}
 </script>
   </body>
 </html>
