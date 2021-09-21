@@ -119,7 +119,7 @@ if ($rid==0)
 			/// 
 			// Check if any education details are updated
 				$edu=0;
-				$odqry1 = "select rowid from eduqual where link_family_family=?";
+				$odqry1 = "select rowid from education where link_family_family=?";
 				$odstmt1 = $conn->prepare($odqry1);
 				$odstmt1->execute([$row2['rowid']]);
 				if ($odrow = $odstmt1->fetch(PDO::FETCH_NUM, PDO::FETCH_ORI_NEXT))
@@ -134,9 +134,9 @@ if ($rid==0)
 			$stmt22 = $conn->prepare($relti);
 			$stmt22->execute([$rel]);
 			$res12 = $stmt22->fetchAll(PDO::FETCH_ASSOC);
-            echo "<tr> <td class='col-md-1'>".$cnt."</td><td class='col-md-4'>".$row2['name']."</td><td class='col-md-2'>".$res12[0]['name']."</td>";
+            echo "<tr> <td class='col-md-1'>".$cnt."</td><td class='col-md-4'>".$row2['rowid']."</td><td class='col-md-2'>".$res12[0]['name']."</td>";
 			echo "<td class='col-md-1'><center><a href='FamilyMember.php?sessionid=".$rn."'><i class='fa fa-pencil' title='Edit Basic details' aria-hidden='true'></i></a></center></td>";
-			echo "<td class='col-md-4'><i class='fa fa-graduation-cap fa-2x' title='Education details' aria-hidden='true' style='color:".$ccode0."'></i>&nbsp;&nbsp;&nbsp;";
+			echo "<td class='col-md-4'><a href='eduDetails.php?sessionid=".$rn."'><i class='fa fa-graduation-cap fa-2x' title='Education details' aria-hidden='true' style='color:".$ccode0."'></i></a>&nbsp;&nbsp;&nbsp;";
 			echo "<i class='fa fa-file-word-o fa-2x' title='Job Experience' aria-hidden='true' style='color:".$ccode1."'></i>&nbsp;&nbsp;&nbsp;";
 			echo "<i class='fa fa-wikipedia-w fa-2x' title='Skill' aria-hidden='true' style='color:".$ccode2."'></i>&nbsp;&nbsp;&nbsp;";
 			echo "<i class='fa fa-thumbs-up fa-2x' title='Awards' aria-hidden='true' style='color:".$ccode3."'></i>&nbsp;&nbsp;&nbsp;";
@@ -165,8 +165,8 @@ if ($rid==0)
 	$(document).ready(function() {
     $('#example').DataTable();
 	} );
-	$('.fa-graduation-cap').on('click', function () {
-		window.location.href="eduDetails.php"
+	$('.fa-graduation-cap').on('click', function (e) {
+		window.location.href="eduDetails.php?"+e.
 	});
 	</script>
   </body>

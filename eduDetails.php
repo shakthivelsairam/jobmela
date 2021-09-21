@@ -183,58 +183,78 @@ button.btn.active:focus {
             echo "Unable to process your request, contact admin";
             return;
           }
-		    $devCount = "select rowid,link_master_master,name,link_relation_relation,fathersname,dob,mobile,doorno,addline1,addline2,addline3,city,state,pincode,aaadhar,language,height from family where rowid=?";
+		    $devCount = "select rowid,link_family_family,edu_level,field_study,college_univer,district,from_period,to_period,percentage,pursing from education where link_family_family=?";
 			$stmt = $conn->prepare($devCount);
-			$stmt->execute([$edirow]);
+			$ress = $stmt->execute([$edirow]);
 			$rec="^^^^^^^^^^^^^^^^^^^^^^^^^^^";
-			if ($row = $stmt->fetch(PDO::FETCH_NUM, PDO::FETCH_ORI_NEXT)) {
-				$rec=$row[0]."^".$row[1]."^".$row[2]."^".$row[3]."^".$row[4]."^".$row[5]."^".$row[6]."^".$row[7]."^".$row[8]."^".$row[9]."^".$row[10]."^".$row[11]."^".$row[12]."^".$row[13]."^".$row[14]."^".$row[15]."^".$row[16];
-				
-			}
-			$pieces = explode("^", $rec);
-		
+			$totRows=$stmt->rowCount();
+			if ($totRows==0) $totRows=1;
+			
 		  ?>
 		   </br> </br>
 		  <h3>Educational Information</h3>
 		 
 		  <div class="row singleRow">
-		  <span class="removeRow">
+		  <?php for ($k=0;$k<$totRows;$k++) 
+		  { 	
+				$rec="^^^^^^^^^^^^^^^^^^^^^^^^^^^";
+				$rec1 = $stmt->fetch(PDO::FETCH_NUM, PDO::FETCH_ORI_NEXT);
+				if ($rec1!="") $rec=$rec1[0]."^".$rec1[1]."^".$rec1[2]."^".$rec1[3]."^".$rec1[4]."^".$rec1[5]."^".$rec1[6]."^".$rec1[7]."^".$rec1[8]."^".$rec1[9];
+				$p=explode("^",$rec);
+				///print_r($p);
+				?>
+		  <span class="removeRow" id="removeRow" name="removeRow">
 			<div class="col-xs-1 small-txt-box" style="width:5%">
 			 <label for="inputCity">S.No</label>
-			<input type="text" name="pSno" id="pSno" class="form-control" placeholder="S.No"  />  
+			<input type="text" name="pSno" id="pSno" class="form-control" placeholder="S.No"  value="<?php echo $k+1; ?>" />  
 			</div>
 			<div class="col-xs-2 small-txt-box">
 			 <label for="inputCity">Education Level</label>
-			<input type="text" name="pEduLevel" id="pEduLevel" class="form-control" placeholder="B.E.,B.A.,M.Sc.,B.Com.,etc"  />                        
+			<select id="pEduLevel" class="form-control" name="pEduLevel">
+			<option value=0>--Select--</option>
+			<?php
+			 $devCoun1t = "select rowid,name from level";
+			$stmt23 = $conn->prepare($devCoun1t);
+			$stmt23->execute();
+			while ($rowx = $stmt23->fetch(PDO::FETCH_NUM, PDO::FETCH_ORI_NEXT)) 
+			{
+				?> <option value="<?php echo $rowx[0]; ?>" <?php if ($p[2]==$rowx[0]) echo " selected"; ?>><?php echo $rowx[1]; ?></option> <?php
+			}
+			?>
+			</select>
 			</div>
 			<div class="col-xs-2 small-txt-box" style="width:20%">
 			<label for="inputCity">Field Of Study</label>
-			<input type="text" name="pFieldStudy" id="pFieldStudy" class="form-control" placeholder="ECE.,Nurshing.,Arts.,etc"  />                        
+			<input type="text" name="pFieldStudy" id="pFieldStudy" value="<?php echo $p[3]; ?>" class="form-control" placeholder="ECE.,Nurshing.,Arts.,etc"  />                        
 			</div>
-			<div class="col-xs-2 small-txt-box">
+			<div class="col-xs-2 small-txt-box" style="width:13%">
 			<label for="inputCity">College/University</label>
-			<input type="text" name="pCollege" id="pCollege" class="form-control" placeholder="College/University"  />                        
+			<input type="text" name="pCollege" id="pCollege" value="<?php echo $p[4]; ?>" class="form-control" placeholder="College/University"  />                        
 			</div>
-			<div class="col-xs-2 small-txt-box" style="width:14%">
+			<div class="col-xs-2 small-txt-box" style="width:12%">
 			<label for="inputCity">District</label>
-			<input type="text" name="pDistrict" id="pDistrict" class="form-control" placeholder="District"  />                        
+			<input type="text" name="pDistrict" id="pDistrict" value="<?php echo $p[5]; ?>" class="form-control" placeholder="District"  />                        
 			</div>
 			<div class="col-xs-2 small-txt-box" style="width:11%">
 			<label for="inputCity">From date</label>
-			<input type="date" name="pFromDate" id="pFromDate" class="form-control" max="<?php echo date('Y-m-d'); ?>"  placeholder="Last Name"  />                        
+			<input type="date" name="pFromDate" id="pFromDate" value="<?php echo $p[6]; ?>" class="form-control" max="<?php echo date('Y-m-d'); ?>"  placeholder="Last Name"  />                        
 			</div>
 			<div class="col-xs-2 small-txt-box" style="width:11%">
 			<label for="inputCity">To date</label>
-			<input type="date" name="pToDate" id="pToDate" class="form-control" max="<?php echo date('Y-m-d'); ?>"  placeholder="Last Name"  />                        
+			<input type="date" name="pToDate" id="pToDate" value="<?php echo $p[7]; ?>" class="form-control" max="<?php echo date('Y-m-d'); ?>"  placeholder="Last Name"  />                        
 			</div>
 			<div class="col-xs-1 small-txt-box" style="width:5%">
+			 <label for="inputCity">Mark %</label>
+			<input type="text" name="pMark" id="pMark" value="<?php echo $p[8]; ?>" class="form-control" placeholder="Percentage"  />  
+			</div>
+			<div class="col-xs-1 small-txt-box purshingDiv" style="width:5%">
 			<label for="inputCity">Purshing</label>
-			<input type="checkbox" name="pPurshing" style="height:20px;margin-top:8px;width:50%" id="pPurshing"/>                        
-			&nbsp;
-			<img src="https://freepikpsd.com/media/2020/12/delete-symbol-png-7.png" onClick="fDelRow(this)" style="vertical-align: baseline;" height="20px" width="20px">
+			<input type="checkbox" name="pPurshing" id="pPurshing" <?php if ($p[9]==1) echo " checked"; ?> style="height:20px;margin-top:8px;width:40%" id="pPurshing"/>                        
+			
 			</div>
 			
 			</span>
+		  <?php  echo '<br><br><br><br>'; } ?> 
 		</div>
 		<div class="col-xs-12 add-btn" style="border:0px solid red;float:right;width:5%">
 		<i class='fa fa-plus fa-2x add-row' title='Add New Row' aria-hidden='true' style='color:green'></i>
@@ -278,7 +298,11 @@ button.btn.active:focus {
 	{
 		//alert(5)
 		$(obj).parents('.removeRow').remove();
-		///$('.singleRow').find(".removeRow").slice(rowid).remove();
+		// $('.obj').find(".removeRow").slice(rowid).remove();
+		//$(obj).closest(".removeRow").html('');
+		//var oobj = document.getElementsByName("removeRow");
+		//alert(obj.length);
+		totRows=totRows-1;
 		
 	}
 	function frowNum(rownum)
@@ -291,6 +315,8 @@ button.btn.active:focus {
 		var pDistrict = document.getElementsByName("pDistrict");
 		var pFromDate = document.getElementsByName("pFromDate");
 		var pToDate = document.getElementsByName("pToDate");
+		var pMark = document.getElementsByName("pMark");
+		var pPurshing = document.getElementsByName("pPurshing");
 		// First make it black then check 
 		pSno[rownum].style.border="1px solid #ccc";
 		pEduLevel[rownum].style.border="1px solid #ccc"; 
@@ -298,16 +324,30 @@ button.btn.active:focus {
 		pCollege[rownum].style.border="1px solid #ccc"; 
 		pDistrict[rownum].style.border="1px solid #ccc";
 		pFromDate[rownum].style.border="1px solid #ccc"; 
-		pToDate[rownum].style.border="1px solid #ccc"; 
+		pToDate[rownum].style.border="1px solid #ccc";
+		pMark[rownum].style.border="1px solid #ccc";
+		
 		
 		
 		if (pSno[rownum].value=="") { pSno[rownum].style.border="1px solid red"; isEmpty=1; }
-		if (pEduLevel[rownum].value=="") { pEduLevel[rownum].style.border="1px solid red"; isEmpty=1; }
+		if (pEduLevel[rownum].value==0) { pEduLevel[rownum].style.border="1px solid red"; isEmpty=1; }
 		if (pFieldStudy[rownum].value=="") { pFieldStudy[rownum].style.border="1px solid red"; isEmpty=1; }
 		if (pCollege[rownum].value=="") { pCollege[rownum].style.border="1px solid red"; isEmpty=1; }
 		if (pDistrict[rownum].value=="") { pDistrict[rownum].style.border="1px solid red"; isEmpty=1; }
 		if (pFromDate[rownum].value=="") { pFromDate[rownum].style.border="1px solid red"; isEmpty=1; }
-		if (pToDate[rownum].value=="") { pToDate[rownum].style.border="1px solid red"; isEmpty=1; }
+		if (pToDate[rownum].value=="")  { 
+			if (!(pPurshing[rownum].checked))
+			{
+			pToDate[rownum].style.border="1px solid red"; isEmpty=1; 
+			}
+		}
+		else 
+		{
+			if ((pMark[rownum].value==""))
+			{
+				pMark[rownum].style.border="1px solid red"; isEmpty=1; 
+			}
+		}
 		return isEmpty;
 	}
   $(document).ready(function () {
@@ -324,15 +364,19 @@ button.btn.active:focus {
 	
 	
 	$('.add-row').on('click',function () {
-		var del='';	///'<i class="fa fa-minus fa-2x" onClick="fDelRow('+totRows+')" aria-hidden="true" style="color:red"></i>';
-		singRow1=singRow;
-		//$('.singleRow').append(singRow);
+		var del='<img id="imgDel" src="https://freepikpsd.com/media/2020/12/delete-symbol-png-7.png" style="vertical-align: baseline;" height="20px" width="20px">';
 		varr = $('.singleRow').html();
+		//alert(varr);
 		var fistChild="";
-		if (totRows==0) fistChild="<br><br><br><br>";
-		str=varr+fistChild+"<span class='removeRow'>"+singRow+'<br><br><br><br><span>';
-		$(".singleRow").html(str);
-		//$('.singleRow').append(del);
+		if (totRows==0) {
+			//$('.removeRow').append("<br><br><br><br>");
+			//varr = $('.singleRow').html();
+		}
+		purshingDiv = document.getElementById("purshingDiv");
+		//alert(purshingDiv)
+		str=varr+singRow+del+'</span>';
+		//$(".removeRow").append(str);
+		$('.singleRow').append(singRow+'<br><br><br><br>');
 		totRows=totRows+1;
 		if (totRows==5)
 		{
@@ -351,12 +395,14 @@ button.btn.active:focus {
 		var pDistrict = document.getElementsByName("pDistrict");
 		var pFromDate = document.getElementsByName("pFromDate");
 		var pToDate = document.getElementsByName("pToDate");
+		var pMark = document.getElementsByName("pMark");
+		var pPurshing = document.getElementsByName("pPurshing");
 		var totRecs = pSno.length;
 		for (cnt=0;cnt<totRecs;cnt++)
 		{
 			if (frowNum(cnt)) ferror=1;
 		}
-		if (ferror) {
+		if ((ferror)||(cnt==0)) {
 			var x = document.getElementById("snackbar");
 			x.className = "show";
 			$("#snackbar").html('Fill mandatory fields');
@@ -371,6 +417,8 @@ button.btn.active:focus {
 		pDistricttxt="";
 		pFromDatetxt="";
 		pToDatetxt="";
+		pMarktxt="";
+		pPurshingtxt="";
 		for (cnt=0;cnt<totRecs;cnt++)
 		{
 			pEduLeveltxt=pEduLeveltxt+"|"+pEduLevel[cnt].value;
@@ -379,8 +427,17 @@ button.btn.active:focus {
 			pDistricttxt=pDistricttxt+"|"+pDistrict[cnt].value;
 			pFromDatetxt=pFromDatetxt+"|"+pFromDate[cnt].value;
 			pToDatetxt=pToDatetxt+"|"+pToDate[cnt].value;
+			pMarktxt=pMarktxt+"|"+pMark[cnt].value;
+			if (pPurshing[cnt].checked==true)
+			{
+				pPurshingtxt=pPurshingtxt+"|"+1;
+			}
+			else
+			{
+				pPurshingtxt=pPurshingtxt+"|"+0;
+			}
+				
 		}
-		pPursing="0|0|0|0|0|0";
 		updaterow=0;
 		 $.ajax({
           url : 'login_ajax.php',
@@ -392,12 +449,14 @@ button.btn.active:focus {
 			'pDistrict' : pDistricttxt,
 			'pFromDate' : pFromDatetxt,
 			'pToDate' : pToDatetxt,
-			'pPursing' : pPursing,
+			'pMark' : pMarktxt,
+			'pPursing' : pPurshingtxt,
 			'totalRows' : totRecs,
 			'zproflag' : 70941
           },
           dataType:'json',
           success : function(data) {
+			  //alert(data['msg']);
 			  var x = document.getElementById("snackbar");
 				x.className = "show";
 				setTimeout(function(){ x.className = x.className.replace("show", ""); }, 4000);
@@ -570,6 +629,13 @@ $('.saveUpdate').click(function() {
 {
 	$('.singleRow').html(singRow);
 		totRows=0;
+		document.getElementsByName("pEduLevel")[0].value="0";
+	document.getElementsByName("pFieldStudy")[0].value="";
+	document.getElementsByName("pCollege")[0].value="";
+	document.getElementsByName("pDistrict")[0].value="";
+	document.getElementsByName("pFromDate")[0].value="";
+	document.getElementsByName("pToDate")[0].value="";
+	document.getElementsByName("pMark")[0].value="";
 }
 </script>
   </body>

@@ -130,6 +130,7 @@ if ((isset($_REQUEST['zproflag']))&&($_REQUEST['zproflag']==70941))
 		$pDistrict=$_REQUEST['pDistrict'];
 		$pFromDate=$_REQUEST['pFromDate'];
 		$pToDate=$_REQUEST['pToDate'];
+		$pMark = $_REQUEST['pMark'];
 		$pPursing=$_REQUEST['pPursing'];
 		$totRecs=$_REQUEST['totalRows'];
 		$masterrowid = $_SESSION["useridref"];
@@ -145,13 +146,13 @@ if ((isset($_REQUEST['zproflag']))&&($_REQUEST['zproflag']==70941))
 			$rec4 = explode("|",$pDistrict)[$ij+1];
 			$rec5 = explode("|",$pFromDate)[$ij+1];
 			$rec6 = explode("|",$pToDate)[$ij+1];
-			$rec7 = 0;	//explode($pPursing,"|")[$ij];
-			$per=7.21;
+			$rec7 = explode("|",$pPursing)[$ij+1];
+			$rec8 = explode("|",$pMark)[$ij+1];
 			$familyreg = "insert into education (
 			link_family_family,edu_level,field_study,college_univer,district,from_period,to_period,pursing,percentage) 
 			values (?,?,?,?,?,?,?,?,?)";
 			$stmt = $conn->prepare($familyreg);
-			$err=$stmt->execute([$masterrowid,$rec1,$rec2,$rec3,$rec4,$rec5,$rec6,$rec7,$per]);
+			$err=$stmt->execute([$masterrowid,$rec1,$rec2,$rec3,$rec4,$rec5,$rec6,$rec7,$rec8]);
 		}
 		$qryResult['status'] = 0;
 		$qryResult['msg'] = "Saved Successfully";
