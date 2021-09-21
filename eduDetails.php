@@ -223,7 +223,7 @@ button.btn.active:focus {
 			?>
 			</select>
 			</div>
-			<div class="col-xs-2 small-txt-box" style="width:20%">
+			<div class="col-xs-2 small-txt-box" style="width:17%">
 			<label for="inputCity">Field Of Study</label>
 			<input type="text" name="pFieldStudy" id="pFieldStudy" value="<?php echo $p[3]; ?>" class="form-control" placeholder="ECE.,Nurshing.,Arts.,etc"  />                        
 			</div>
@@ -235,11 +235,11 @@ button.btn.active:focus {
 			<label for="inputCity">District</label>
 			<input type="text" name="pDistrict" id="pDistrict" value="<?php echo $p[5]; ?>" class="form-control" placeholder="District"  />                        
 			</div>
-			<div class="col-xs-2 small-txt-box" style="width:11%">
+			<div class="col-xs-2 small-txt-box" style="width:12.5%">
 			<label for="inputCity">From date</label>
 			<input type="date" name="pFromDate" id="pFromDate" value="<?php echo $p[6]; ?>" class="form-control" max="<?php echo date('Y-m-d'); ?>"  placeholder="Last Name"  />                        
 			</div>
-			<div class="col-xs-2 small-txt-box" style="width:11%">
+			<div class="col-xs-2 small-txt-box" style="width:12.5%">
 			<label for="inputCity">To date</label>
 			<input type="date" name="pToDate" id="pToDate" value="<?php echo $p[7]; ?>" class="form-control" max="<?php echo date('Y-m-d'); ?>"  placeholder="Last Name"  />                        
 			</div>
@@ -439,6 +439,7 @@ button.btn.active:focus {
 				
 		}
 		updaterow=0;
+		familyRow = "<?php echo $edirow; ?>";
 		 $.ajax({
           url : 'login_ajax.php',
           type : 'POST',
@@ -452,6 +453,7 @@ button.btn.active:focus {
 			'pMark' : pMarktxt,
 			'pPursing' : pPurshingtxt,
 			'totalRows' : totRecs,
+			'familyRow' : familyRow,
 			'zproflag' : 70941
           },
           dataType:'json',
@@ -575,7 +577,7 @@ $('.saveUpdate').click(function() {
 	if (sltDept === '') {  $('#sltDept').css("border", "1px solid red"); ferror=1}
     if (ferror) return false;
 	
-	userrow = '<?php echo $edirow ;?>';
+
 	
     //
     // save the user details and trigger email

@@ -133,7 +133,7 @@ if ((isset($_REQUEST['zproflag']))&&($_REQUEST['zproflag']==70941))
 		$pMark = $_REQUEST['pMark'];
 		$pPursing=$_REQUEST['pPursing'];
 		$totRecs=$_REQUEST['totalRows'];
-		$masterrowid = $_SESSION["useridref"];
+		$masterrowid = $_REQUEST["familyRow"];
 		$familyreg = "delete from education where link_family_family=?";
 		$stmt = $conn->prepare($familyreg);
 		$er = $stmt->execute([$masterrowid]);
