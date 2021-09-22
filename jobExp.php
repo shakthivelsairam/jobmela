@@ -25,7 +25,7 @@ if (isset($_REQUEST['sessionid']))
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
     
-    <title>Portal</title>
+    <title>Job Experience</title>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- Bootstrap core CSS -->
     <link href="https://getbootstrap.com/docs/3.4/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -183,7 +183,7 @@ button.btn.active:focus {
             echo "Unable to process your request, contact admin";
             return;
           }
-		    $devCount = "select rowid,link_family_family,edu_level,field_study,college_univer,district,from_period,to_period,percentage,pursing from education where link_family_family=?";
+		    $devCount = "select rowid,link_family_family,link_job_job,link_city_city,link_company_company,description,from_period,to_period,persuing from jobexp where link_family_family=?";
 			$stmt = $conn->prepare($devCount);
 			$ress = $stmt->execute([$edirow]);
 			$rec="^^^^^^^^^^^^^^^^^^^^^^^^^^^";
@@ -192,14 +192,14 @@ button.btn.active:focus {
 			
 		  ?>
 		   </br> </br>
-		  <h3>Educational Information</h3>
+		  <h3>Professional Experience</h3>
 		 
 		  <div class="row singleRow">
 		  <?php for ($k=0;$k<$totRows;$k++) 
 		  { 	
 				$rec="^^^^^^^^^^^^^^^^^^^^^^^^^^^";
 				$rec1 = $stmt->fetch(PDO::FETCH_NUM, PDO::FETCH_ORI_NEXT);
-				if ($rec1!="") $rec=$rec1[0]."^".$rec1[1]."^".$rec1[2]."^".$rec1[3]."^".$rec1[4]."^".$rec1[5]."^".$rec1[6]."^".$rec1[7]."^".$rec1[8]."^".$rec1[9];
+				if ($rec1!="") $rec=$rec1[0]."^".$rec1[1]."^".$rec1[2]."^".$rec1[3]."^".$rec1[4]."^".$rec1[5]."^".$rec1[6]."^".$rec1[7]."^".$rec1[8];
 				$p=explode("^",$rec);
 				///print_r($p);
 				?>
@@ -209,47 +209,32 @@ button.btn.active:focus {
 			<input type="text" name="pSno" id="pSno" class="form-control" placeholder="S.No"  value="<?php echo $k+1; ?>" />  
 			</div>
 			<div class="col-xs-2 small-txt-box">
-			 <label for="inputCity">Education Level</label>
-			<select id="pEduLevel" class="form-control" name="pEduLevel">
-			<option value=0>--Select--</option>
-			<?php
-			 $devCoun1t = "select rowid,name from level";
-			$stmt23 = $conn->prepare($devCoun1t);
-			$stmt23->execute();
-			while ($rowx = $stmt23->fetch(PDO::FETCH_NUM, PDO::FETCH_ORI_NEXT)) 
-			{
-				?> <option value="<?php echo $rowx[0]; ?>" <?php if ($p[2]==$rowx[0]) echo " selected"; ?>><?php echo $rowx[1]; ?></option> <?php
-			}
-			?>
-			</select>
+			 <label for="inputCity">Job Title</label>
+			<input type="text" name="pEduLevel" id="pEduLevel" class="form-control" placeholder="Job Title"  value="<?php echo $p[2]; ?>" />  
 			</div>
 			<div class="col-xs-2 small-txt-box" style="width:17%">
-			<label for="inputCity">Field Of Study</label>
-			<input type="text" name="pFieldStudy" id="pFieldStudy" value="<?php echo $p[3]; ?>" class="form-control" placeholder="ECE.,Nurshing.,Arts.,etc"  />                        
+			<label for="inputCity">Company</label>
+			<input type="text" name="pFieldStudy" id="pFieldStudy" value="<?php echo $p[3]; ?>" class="form-control" placeholder="Company"  />                        
 			</div>
 			<div class="col-xs-2 small-txt-box" style="width:13%">
-			<label for="inputCity">College/University</label>
-			<input type="text" name="pCollege" id="pCollege" value="<?php echo $p[4]; ?>" class="form-control" placeholder="College/University"  />                        
+			<label for="inputCity">City/District</label>
+			<input type="text" name="pCollege" id="pCollege" value="<?php echo $p[4]; ?>" class="form-control" placeholder="District"  />                        
 			</div>
 			<div class="col-xs-2 small-txt-box" style="width:12%">
-			<label for="inputCity">District</label>
-			<input type="text" name="pDistrict" id="pDistrict" value="<?php echo $p[5]; ?>" class="form-control" placeholder="District"  />                        
+			<label for="inputCity">Description</label>
+			<input type="text" name="pDistrict" id="pDistrict" value="<?php echo $p[5]; ?>" class="form-control" placeholder="Description"  />                        
 			</div>
 			<div class="col-xs-2 small-txt-box" style="width:12.5%">
 			<label for="inputCity">From date</label>
-			<input type="date" name="pFromDate" id="pFromDate" value="<?php echo $p[6]; ?>" class="form-control" max="<?php echo date('Y-m-d'); ?>"  placeholder="Last Name"  />                        
+			<input type="date" name="pFromDate" id="pFromDate" value="<?php echo $p[6]; ?>" class="form-control" max="<?php echo date('Y-m-d'); ?>"  placeholder="From Date"  />                        
 			</div>
 			<div class="col-xs-2 small-txt-box" style="width:12.5%">
 			<label for="inputCity">To date</label>
-			<input type="date" name="pToDate" id="pToDate" value="<?php echo $p[7]; ?>" class="form-control" max="<?php echo date('Y-m-d'); ?>"  placeholder="Last Name"  />                        
+			<input type="date" name="pToDate" id="pToDate" value="<?php echo $p[7]; ?>" class="form-control" max="<?php echo date('Y-m-d'); ?>"  placeholder="To Date"  />                        
 			</div>
-			<div class="col-xs-1 small-txt-box" style="width:5%">
-			 <label for="inputCity">Mark %</label>
-			<input type="text" name="pMark" id="pMark" value="<?php echo $p[8]; ?>" class="form-control" placeholder="Percentage"  />  
-			</div>
-			<div class="col-xs-1 small-txt-box purshingDiv" style="width:5%">
-			<label for="inputCity">Purshing</label>
-			<input type="checkbox" name="pPurshing" id="pPurshing" <?php if ($p[9]==1) echo " checked"; ?> style="height:20px;margin-top:8px;width:40%" id="pPurshing"/>                        
+			<div class="col-xs-1 small-txt-box purshingDiv" style="width:8%">
+			<label for="inputCity">Working here</label>
+			<input type="checkbox" name="pPurshing" id="pPurshing" <?php if ($p[8]==1) echo " checked"; ?> style="height:20px;margin-top:8px;width:40%" id="pPurshing"/>                        
 			<?php if ($k>0) echo '&nbsp;&nbsp;<img src="assets/img/delete_icon.png" onClick="fDelRow(this)" style="vertical-align: baseline;" heigth="20px" width="20px">'; ?>
 			</div>
 		  <?php if ($k!=($totRows-1)) echo "<br><br><br><br>"; ?>
@@ -296,32 +281,18 @@ button.btn.active:focus {
 	totRows=Number(totRows);
 	var singRow = '<span class="removeRow" id="removeRow" name="removeRow"><br><br><br><br> <div class="col-xs-1 small-txt-box" style="width:5%">';
 	singRow = singRow+'<label for="inputCity">S.No</label><input type="text" name="pSno" id="pSno" class="form-control" placeholder="S.No"  value="" />  ';
-	singRow = singRow+'</div><div class="col-xs-2 small-txt-box"><label for="inputCity">Education Level</label><select id="pEduLevel" class="form-control" name="pEduLevel">';
-	singRow = singRow+'<option value=0>--Select--</option>';
-	<?php
-	 $devCoun1t = "select rowid,name from level";
-	$stmt23 = $conn->prepare($devCoun1t);
-	$stmt23->execute();
-	while ($rowx = $stmt23->fetch(PDO::FETCH_NUM, PDO::FETCH_ORI_NEXT)) 
-	{
-		?> 
-		singRow = singRow+'<option value="<?php echo $rowx[0]; ?>"><?php echo $rowx[1]; ?></option>';
-		<?php
-	}
-	?>
-	singRow = singRow+'</select></div><div class="col-xs-2 small-txt-box" style="width:17%"><label for="inputCity">Field Of Study</label>';
-	singRow = singRow+'<input type="text" name="pFieldStudy" id="pFieldStudy" value="" class="form-control" placeholder="ECE.,Nurshing.,Arts.,etc"  />';                        
-	singRow = singRow+'</div><div class="col-xs-2 small-txt-box" style="width:13%"><label for="inputCity">College/University</label>';
-	singRow = singRow+'<input type="text" name="pCollege" id="pCollege" value="" class="form-control" placeholder="College/University"  /></div>';
+	singRow = singRow+'</div><div class="col-xs-2 small-txt-box"><label for="inputCity">job Title</label><input type="text" name="pEduLevel" id="pEduLevel" class="form-control" placeholder="Job Title"  value="" /> ';
+	singRow = singRow+'</div><div class="col-xs-2 small-txt-box" style="width:17%"><label for="inputCity">Company</label>';
+	singRow = singRow+'<input type="text" name="pFieldStudy" id="pFieldStudy" value="" class="form-control" placeholder="Company"  />';                        
+	singRow = singRow+'</div><div class="col-xs-2 small-txt-box" style="width:13%"><label for="inputCity">City/District</label>';
+	singRow = singRow+'<input type="text" name="pCollege" id="pCollege" value="" class="form-control" placeholder="City/District"  /></div>';
 	singRow = singRow+'<div class="col-xs-2 small-txt-box" style="width:12%">';
-	singRow = singRow+'<label for="inputCity">District</label>';
-	singRow = singRow+'<input type="text" name="pDistrict" id="pDistrict" value="" class="form-control" placeholder="District"  /></div>';
+	singRow = singRow+'<label for="inputCity">Description</label>';
+	singRow = singRow+'<input type="text" name="pDistrict" id="pDistrict" value="" class="form-control" placeholder="Description"  /></div>';
 	singRow = singRow+'<div class="col-xs-2 small-txt-box" style="width:12.5%"><label for="inputCity">From date</label>';
 	singRow = singRow+'<input type="date" name="pFromDate" id="pFromDate" value="" class="form-control" max="<?php echo date("Y-m-d"); ?>"  placeholder="Last Name"  /></div>';
 	singRow = singRow+'<div class="col-xs-2 small-txt-box" style="width:12.5%"><label for="inputCity">To date</label>';
 	singRow = singRow+'<input type="date" name="pToDate" id="pToDate" value="" class="form-control" max="<?php echo date("Y-m-d"); ?>"  placeholder="Last Name"  /></div>';
-	singRow = singRow+'<div class="col-xs-1 small-txt-box" style="width:5%"><label for="inputCity">Mark %</label>';
-	singRow = singRow+'<input type="text" name="pMark" id="pMark" value="" class="form-control" placeholder="Percentage"  /></div>';
 	singRow = singRow+'<div class="col-xs-1 small-txt-box purshingDiv" style="width:5%"><label for="inputCity">Purshing</label>';
 	singRow = singRow+'<input type="checkbox" name="pPurshing" id="pPurshing" style="height:20px;margin-top:8px;width:40%" id="pPurshing"/>';
 	singRow = singRow+'&nbsp;&nbsp;&nbsp;<img src="assets/img/delete_icon.png" onClick="fDelRow(this)" style="vertical-align: baseline;" heigth="20px" width="20px"></div></span>';
@@ -349,7 +320,7 @@ button.btn.active:focus {
 		var pDistrict = document.getElementsByName("pDistrict");
 		var pFromDate = document.getElementsByName("pFromDate");
 		var pToDate = document.getElementsByName("pToDate");
-		var pMark = document.getElementsByName("pMark");
+		//var pMark = document.getElementsByName("pMark");
 		var pPurshing = document.getElementsByName("pPurshing");
 		// First make it black then check 
 		pSno[rownum].style.border="1px solid #ccc";
@@ -359,12 +330,12 @@ button.btn.active:focus {
 		pDistrict[rownum].style.border="1px solid #ccc";
 		pFromDate[rownum].style.border="1px solid #ccc"; 
 		pToDate[rownum].style.border="1px solid #ccc";
-		pMark[rownum].style.border="1px solid #ccc";
+		//pMark[rownum].style.border="1px solid #ccc";
 		
 		
 		
 		if (pSno[rownum].value=="") { pSno[rownum].style.border="1px solid red"; isEmpty=1; }
-		if (pEduLevel[rownum].value==0) { pEduLevel[rownum].style.border="1px solid red"; isEmpty=1; }
+		if (pEduLevel[rownum].value=="") { pEduLevel[rownum].style.border="1px solid red"; isEmpty=1; }
 		if (pFieldStudy[rownum].value=="") { pFieldStudy[rownum].style.border="1px solid red"; isEmpty=1; }
 		if (pCollege[rownum].value=="") { pCollege[rownum].style.border="1px solid red"; isEmpty=1; }
 		if (pDistrict[rownum].value=="") { pDistrict[rownum].style.border="1px solid red"; isEmpty=1; }
@@ -373,13 +344,6 @@ button.btn.active:focus {
 			if (!(pPurshing[rownum].checked))
 			{
 			pToDate[rownum].style.border="1px solid red"; isEmpty=1; 
-			}
-		}
-		else 
-		{
-			if ((pMark[rownum].value==""))
-			{
-				pMark[rownum].style.border="1px solid red"; isEmpty=1; 
 			}
 		}
 		return isEmpty;
@@ -417,7 +381,7 @@ button.btn.active:focus {
 		var pDistrict = document.getElementsByName("pDistrict");
 		var pFromDate = document.getElementsByName("pFromDate");
 		var pToDate = document.getElementsByName("pToDate");
-		var pMark = document.getElementsByName("pMark");
+		//var pMark = document.getElementsByName("pMark");
 		var pPurshing = document.getElementsByName("pPurshing");
 		var totRecs = pSno.length;
 		for (cnt=0;cnt<totRecs;cnt++)
@@ -439,7 +403,7 @@ button.btn.active:focus {
 		pDistricttxt="";
 		pFromDatetxt="";
 		pToDatetxt="";
-		pMarktxt="";
+		//pMarktxt="";
 		pPurshingtxt="";
 		for (cnt=0;cnt<totRecs;cnt++)
 		{
@@ -449,7 +413,7 @@ button.btn.active:focus {
 			pDistricttxt=pDistricttxt+"|"+pDistrict[cnt].value;
 			pFromDatetxt=pFromDatetxt+"|"+pFromDate[cnt].value;
 			pToDatetxt=pToDatetxt+"|"+pToDate[cnt].value;
-			pMarktxt=pMarktxt+"|"+pMark[cnt].value;
+			//pMarktxt=pMarktxt+"|"+pMark[cnt].value;
 			if (pPurshing[cnt].checked==true)
 			{
 				pPurshingtxt=pPurshingtxt+"|"+1;
@@ -472,11 +436,10 @@ button.btn.active:focus {
 			'pDistrict' : pDistricttxt,
 			'pFromDate' : pFromDatetxt,
 			'pToDate' : pToDatetxt,
-			'pMark' : pMarktxt,
 			'pPursing' : pPurshingtxt,
 			'totalRows' : totRecs,
 			'familyRow' : familyRow,
-			'zproflag' : 70941
+			'zproflag' : 901635121
           },
           dataType:'json',
           success : function(data) {
@@ -653,13 +616,13 @@ $('.saveUpdate').click(function() {
 {
 	$('.singleRow').html(singRow);
 		totRows=0;
-		document.getElementsByName("pEduLevel")[0].value="0";
+		document.getElementsByName("pEduLevel")[0].value="";
 	document.getElementsByName("pFieldStudy")[0].value="";
 	document.getElementsByName("pCollege")[0].value="";
 	document.getElementsByName("pDistrict")[0].value="";
 	document.getElementsByName("pFromDate")[0].value="";
 	document.getElementsByName("pToDate")[0].value="";
-	document.getElementsByName("pMark")[0].value="";
+	//document.getElementsByName("pMark")[0].value="";
 }
 </script>
   </body>

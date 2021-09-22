@@ -118,6 +118,7 @@ if ($rid==0)
 			$rel = $row2['link_relation_relation'];
 			/// 
 			// Check if any education details are updated
+				$ccode0=$ccode1=$ccode2=$ccode3=$ccode4=$ccode5=$ccode6="#CFD3C8";
 				$edu=0;
 				$odqry1 = "select rowid from education where link_family_family=?";
 				$odstmt1 = $conn->prepare($odqry1);
@@ -126,8 +127,61 @@ if ($rid==0)
 				{
 					$edu=1;
 				}
-				$ccode0=$ccode1=$ccode2=$ccode3=$ccode4=$ccode5=$ccode6="#CFD3C8";
 				if ($edu==1) $ccode0="#B7E954";
+				$job=0;
+				$odqry2 = "select rowid from jobexp where link_family_family=?";
+				$odstmt2 = $conn->prepare($odqry2);
+				$odstmt2->execute([$row2['rowid']]);
+				if ($odrow = $odstmt2->fetch(PDO::FETCH_NUM, PDO::FETCH_ORI_NEXT))
+				{
+					$job=1;
+				}
+				if ($job==1) $ccode1="#B7E954";
+				$skill=0;
+				$odqry2 = "select rowid from skill_interested where link_family_family=?";
+				$odstmt2 = $conn->prepare($odqry2);
+				$odstmt2->execute([$row2['rowid']]);
+				if ($odrow = $odstmt2->fetch(PDO::FETCH_NUM, PDO::FETCH_ORI_NEXT))
+				{
+					$skill=1;
+				}
+				if ($skill==1) $ccode2="#B7E954";
+				$award=0;
+				$odqry2 = "select rowid from awards_received where link_family_family=?";
+				$odstmt2 = $conn->prepare($odqry2);
+				$odstmt2->execute([$row2['rowid']]);
+				if ($odrow = $odstmt2->fetch(PDO::FETCH_NUM, PDO::FETCH_ORI_NEXT))
+				{
+					$award=1;
+				}
+				if ($award==1) $ccode3="#B7E954";
+				$cert=0;
+				$odqry2 = "select rowid from certifications_having where link_family_family=?";
+				$odstmt2 = $conn->prepare($odqry2);
+				$odstmt2->execute([$row2['rowid']]);
+				if ($odrow = $odstmt2->fetch(PDO::FETCH_NUM, PDO::FETCH_ORI_NEXT))
+				{
+					$cert=1;
+				}
+				if ($cert==1) $ccode4="#B7E954";
+				$proj=0;
+				$odqry2 = "select rowid from projects_presented where link_family_family=?";
+				$odstmt2 = $conn->prepare($odqry2);
+				$odstmt2->execute([$row2['rowid']]);
+				if ($odrow = $odstmt2->fetch(PDO::FETCH_NUM, PDO::FETCH_ORI_NEXT))
+				{
+					$proj=1;
+				}
+				if ($proj==1) $ccode5="#B7E954";
+				$pat=0;
+				$odqry2 = "select rowid from patent_presented where link_family_family=?";
+				$odstmt2 = $conn->prepare($odqry2);
+				$odstmt2->execute([$row2['rowid']]);
+				if ($odrow = $odstmt2->fetch(PDO::FETCH_NUM, PDO::FETCH_ORI_NEXT))
+				{
+					$pat=1;
+				}
+				if ($pat==1) $ccode6="#B7E954";
 			
 			$desc="";
 			$relti = "select name from relation where rowid=?";
@@ -137,12 +191,12 @@ if ($rid==0)
             echo "<tr> <td class='col-md-1'>".$cnt."</td><td class='col-md-4'>".$row2['name']."</td><td class='col-md-2'>".$res12[0]['name']."</td>";
 			echo "<td class='col-md-1'><center><a href='FamilyMember.php?sessionid=".$rn."'><i class='fa fa-pencil' title='Edit Basic details' aria-hidden='true'></i></a></center></td>";
 			echo "<td class='col-md-4'><a href='eduDetails.php?sessionid=".$rn."'><i class='fa fa-graduation-cap fa-2x' title='Education details' aria-hidden='true' style='color:".$ccode0."'></i></a>&nbsp;&nbsp;&nbsp;";
-			echo "<i class='fa fa-file-word-o fa-2x' title='Job Experience' aria-hidden='true' style='color:".$ccode1."'></i>&nbsp;&nbsp;&nbsp;";
-			echo "<i class='fa fa-wikipedia-w fa-2x' title='Skill' aria-hidden='true' style='color:".$ccode2."'></i>&nbsp;&nbsp;&nbsp;";
-			echo "<i class='fa fa-thumbs-up fa-2x' title='Awards' aria-hidden='true' style='color:".$ccode3."'></i>&nbsp;&nbsp;&nbsp;";
-			echo "<i class='fa fa-certificate fa-2x' title='Certifications/Licenses' aria-hidden='true' style='color:".$ccode4."'></i>&nbsp;&nbsp;&nbsp;";
-			echo "<i class='fa fa-leanpub fa-2x' title='Projeccts/Paper Presented' aria-hidden='true' style='color:".$ccode5."'>&nbsp;&nbsp;&nbsp;";
-			echo "<i class='fa fa-copyright fa-1x' title='Patent' aria-hidden='true' style='color:".$ccode6."'></i></i></td></tr>";
+			echo "<a href='jobExp.php?sessionid=".$rn."'><i class='fa fa-file-word-o fa-2x' title='Job Experience' aria-hidden='true' style='color:".$ccode1."'></i></a>&nbsp;&nbsp;&nbsp;";
+			echo "<a href='skills.php?sessionid=".$rn."'><i class='fa fa-wikipedia-w fa-2x' title='Skill' aria-hidden='true' style='color:".$ccode2."'></i></a>&nbsp;&nbsp;&nbsp;";
+			echo "<a href='awards.php?sessionid=".$rn."'><i class='fa fa-thumbs-up fa-2x' title='Awards' aria-hidden='true' style='color:".$ccode3."'></i></a>&nbsp;&nbsp;&nbsp;";
+			echo "<a href='certification.php?sessionid=".$rn."'><i class='fa fa-certificate fa-2x' title='Certifications/Licenses' aria-hidden='true' style='color:".$ccode4."'></i></a>&nbsp;&nbsp;&nbsp;";
+			echo "<a href='projects.php?sessionid=".$rn."'><i class='fa fa-leanpub fa-2x' title='Projects/Paper Presented' aria-hidden='true' style='color:".$ccode5."'></i></a>&nbsp;&nbsp;&nbsp;";
+			echo "<a href='patent.php?sessionid=".$rn."'><i class='fa fa-copyright fa-2x' title='Patent' aria-hidden='true' style='color:".$ccode6."'></i></a></td></tr>";
           }
 		 }
 		  ?>

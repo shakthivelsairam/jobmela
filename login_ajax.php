@@ -83,14 +83,18 @@ if ((isset($_REQUEST['zproflag']))&&($_REQUEST['zproflag']==109091))
 	  $pLanguage = $_REQUEST['pLanguage'];
 	  $pHeight = $_REQUEST['pHeight'];
 	  $pRelation = $_REQUEST['pRelation'];
+	  $pIndustry = $_REQUEST['pIndustry'];
+	  $pWorkLoc = $_REQUEST['pWorkLoc'];
 	  $masterrowid = $_SESSION["useridref"];
 	  //$pName = $_FILES["image"]["name"];
 	   $updaterow=$_REQUEST['updaterow'];
 	   if ($updaterow>0)
 	   {
-		   $familyreg = "update family set name=?,link_relation_relation=?,fathersname=?,dob=?,mobile=?,doorno=?,addline1=?,addline2=?,addline3=?,city=?,state=?,pincode=?,aaadhar=?,language=?,height=? where rowid=?";
+		   // preferredLoc
+		   // prefferedInd
+		   $familyreg = "update family set name=?,link_relation_relation=?,fathersname=?,dob=?,mobile=?,doorno=?,addline1=?,addline2=?,addline3=?,city=?,state=?,pincode=?,aaadhar=?,language=?,height=?,preferredLoc=?,prefferedInd=? where rowid=?";
 		$stmt = $conn->prepare($familyreg);
-		$er = $stmt->execute([$pName,$pRelation,$pFName,$pDOB,$pMobile,$pDoorNo,$pAddLine1,$pAddLine2,$pAddLine3,$pCity,$pState,$pPinCode,$pAadhar,$pLanguage,$pHeight,$updaterow]);
+		$er = $stmt->execute([$pName,$pRelation,$pFName,$pDOB,$pMobile,$pDoorNo,$pAddLine1,$pAddLine2,$pAddLine3,$pCity,$pState,$pPinCode,$pAadhar,$pLanguage,$pHeight,$pWorkLoc,$pIndustry,$updaterow]);
 		$qryResult['status'] = 0;
 		$qryResult['msg'] = "Updated Successfully";
 		$_SESSION["savedRow"]=$updaterow;
@@ -98,10 +102,10 @@ if ((isset($_REQUEST['zproflag']))&&($_REQUEST['zproflag']==109091))
 	   else
 	   {
 		$familyreg = "insert into family (
-		link_master_master,name,link_relation_relation,fathersname,dob,mobile,doorno,addline1,addline2,addline3,city,state,pincode,aaadhar,language,height) 
-		values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		link_master_master,name,link_relation_relation,fathersname,dob,mobile,doorno,addline1,addline2,addline3,city,state,pincode,aaadhar,language,height,preferredLoc,prefferedInd) 
+		values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		$stmt = $conn->prepare($familyreg);
-		$stmt->execute([$masterrowid,$pName,$pRelation,$pFName,$pDOB,$pMobile,$pDoorNo,$pAddLine1,$pAddLine2,$pAddLine3,$pCity,$pState,$pPinCode,$pAadhar,$pLanguage,$pHeight]);
+		$stmt->execute([$masterrowid,$pName,$pRelation,$pFName,$pDOB,$pMobile,$pDoorNo,$pAddLine1,$pAddLine2,$pAddLine3,$pCity,$pState,$pPinCode,$pAadhar,$pLanguage,$pHeight,$pWorkLoc,$pIndustry]);
 		$qryResult['status'] = 0;
 		$qryResult['msg'] = "Saved Successfully";
 		$_SESSION["savedRow"]=$conn->lastInsertId();
@@ -117,7 +121,60 @@ if ((isset($_REQUEST['zproflag']))&&($_REQUEST['zproflag']==109091))
 	echo json_encode($qryResult);
 	return;
   }
+} 
+
+
+ /// Educational details
+ 
+if ((isset($_REQUEST['zproflag']))&&($_REQUEST['zproflag']==901635121))
+{
+	try {
+		$qryResult = array();
+		$qryResult['status'] = 1;
+		$qryResult['msg'] = "Failed to save!";
+		$pEduLevel=$_REQUEST['pEduLevel'];
+		$pFieldStudy=$_REQUEST['pFieldStudy'];
+		$pCollege=$_REQUEST['pCollege'];
+		$pDistrict=$_REQUEST['pDistrict'];
+		$pFromDate=$_REQUEST['pFromDate'];
+		$pToDate=$_REQUEST['pToDate'];
+		$pPursing=$_REQUEST['pPursing'];
+		$totRecs=$_REQUEST['totalRows'];
+		$masterrowid = $_REQUEST["familyRow"];
+		$familyreg = "delete from jobexp where link_family_family=?";
+		$stmt = $conn->prepare($familyreg);
+		$er = $stmt->execute([$masterrowid]);
+		for ($ij=0;$ij<$totRecs;$ij++)
+		{
+			
+			$rec1 = explode("|",$pEduLevel)[$ij+1];
+			$rec2 = explode("|",$pFieldStudy)[$ij+1];
+			$rec3 = explode("|",$pCollege)[$ij+1];
+			$rec4 = explode("|",$pDistrict)[$ij+1];
+			$rec5 = explode("|",$pFromDate)[$ij+1];
+			$rec6 = explode("|",$pToDate)[$ij+1];
+			$rec7 = explode("|",$pPursing)[$ij+1];
+			$familyreg = "insert into jobexp (
+			link_family_family,link_job_job,link_city_city,link_company_company,description,from_period,to_period,persuing) 
+			values (?,?,?,?,?,?,?,?)";
+			$stmt = $conn->prepare($familyreg);
+			$err=$stmt->execute([$masterrowid,$rec1,$rec2,$rec3,$rec4,$rec5,$rec6,$rec7]);
+		}
+		$qryResult['status'] = 0;
+		$qryResult['msg'] = "Saved Successfully";
+		echo json_encode($qryResult);
+		return;
+		
+	}
+	catch(PDOException $e) {
+		$qryResult = array();
+		$qryResult['status'] = 1;
+		$qryResult['msg'] = "Unable to save, please contact admin".$e;
+		echo json_encode($qryResult);
+		return;
+  }
 }
+// Job Experiance details
 if ((isset($_REQUEST['zproflag']))&&($_REQUEST['zproflag']==70941))
 {
 	try {
@@ -168,6 +225,223 @@ if ((isset($_REQUEST['zproflag']))&&($_REQUEST['zproflag']==70941))
 		return;
   }
 }
+// Skills details
+if ((isset($_REQUEST['zproflag']))&&($_REQUEST['zproflag']==90182612))
+{
+	try {
+		$qryResult = array();
+		$qryResult['status'] = 1;
+		$qryResult['msg'] = "Failed to save!";
+		$pEduLevel=$_REQUEST['pEduLevel'];
+		$pLevel=$_REQUEST['pLevel'];
+		$totRecs=$_REQUEST['totalRows'];
+		$masterrowid = $_REQUEST["familyRow"];
+		$familyreg = "delete from skill_interested where link_family_family=?";
+		$stmt = $conn->prepare($familyreg);
+		$er = $stmt->execute([$masterrowid]);
+		for ($ij=0;$ij<$totRecs;$ij++)
+		{
+			
+			$rec1 = explode("|",$pEduLevel)[$ij+1];
+			$rec2 = explode("|",$pLevel)[$ij+1];
+			$familyreg = "insert into skill_interested (
+			link_family_family,link_skill_skill,level) 
+			values (?,?,?)";
+			$stmt = $conn->prepare($familyreg);
+			$err=$stmt->execute([$masterrowid,$rec1,$rec2]);
+		}
+		$qryResult['status'] = 0;
+		$qryResult['msg'] = "Saved Successfully";
+		echo json_encode($qryResult);
+		return;
+		
+	}
+	catch(PDOException $e) {
+		$qryResult = array();
+		$qryResult['status'] = 1;
+		$qryResult['msg'] = "Unable to save, please contact admin".$e;
+		echo json_encode($qryResult);
+		return;
+  }
+}
+// Award portal
+if ((isset($_REQUEST['zproflag']))&&($_REQUEST['zproflag']==67675102))
+{
+	try {
+		$qryResult = array();
+		$qryResult['status'] = 1;
+		$qryResult['msg'] = "Failed to save!";
+		$pTitle=$_REQUEST['pTitle'];
+		$pAward=$_REQUEST['pAwardDte'];
+		$pDesc=$_REQUEST['pDesc'];
+		$totRecs=$_REQUEST['totalRows'];
+		$masterrowid = $_REQUEST["familyRow"];
+		$familyreg = "delete from awards_received where link_family_family=?";
+		$stmt = $conn->prepare($familyreg);
+		$er = $stmt->execute([$masterrowid]);
+		for ($ij=0;$ij<$totRecs;$ij++)
+		{
+			$rec1 = explode("|",$pTitle)[$ij+1];
+			$rec2 = explode("|",$pAward)[$ij+1];
+			$rec3 = explode("|",$pDesc)[$ij+1];
+			$familyreg = "insert into awards_received (
+			link_family_family,link_award_award,dateofaward,description) 
+			values (?,?,?,?)";
+			$stmt = $conn->prepare($familyreg);
+			$err=$stmt->execute([$masterrowid,$rec1,$rec2,$rec3]);
+		}
+		$qryResult['status'] = 0;
+		$qryResult['msg'] = "Saved Successfully";
+		echo json_encode($qryResult);
+		return;
+		
+	}
+	catch(PDOException $e) {
+		$qryResult = array();
+		$qryResult['status'] = 1;
+		$qryResult['msg'] = "Unable to save, please contact admin".$e;
+		echo json_encode($qryResult);
+		return;
+  }
+}
+
+// Certifications portal
+if ((isset($_REQUEST['zproflag']))&&($_REQUEST['zproflag']==444000012))
+{
+	try {
+		$qryResult = array();
+		$qryResult['status'] = 1;
+		$qryResult['msg'] = "Failed to save!";
+		$pTitle=$_REQUEST['pTitle'];
+		$pAwardedDate=$_REQUEST['pAwardedDate'];
+		$pExpiryDate=$_REQUEST['pExpiryDate'];
+		$pNeverExpiry=$_REQUEST['pNeverExpiry'];
+		$totRecs=$_REQUEST['totalRows'];
+		$masterrowid = $_REQUEST["familyRow"];
+		$familyreg = "delete from certifications_having where link_family_family=?";
+		$stmt = $conn->prepare($familyreg);
+		$er = $stmt->execute([$masterrowid]);
+		for ($ij=0;$ij<$totRecs;$ij++)
+		{
+			$rec1 = explode("|",$pTitle)[$ij+1];
+			$rec2 = explode("|",$pAwardedDate)[$ij+1];
+			$rec3 = explode("|",$pExpiryDate)[$ij+1];
+			$rec4 = explode("|",$pNeverExpiry)[$ij+1];
+			$familyreg = "insert into certifications_having (
+			link_family_family,link_certification_certification,dateofcertification,dateofexpiry,neverexpiry) 
+			values (?,?,?,?,?)";
+			$stmt = $conn->prepare($familyreg);
+			$err=$stmt->execute([$masterrowid,$rec1,$rec2,$rec3,$rec4]);
+		}
+		$qryResult['status'] = 0;
+		$qryResult['msg'] = "Saved Successfully";
+		echo json_encode($qryResult);
+		return;
+		
+	}
+	catch(PDOException $e) {
+		$qryResult = array();
+		$qryResult['status'] = 1;
+		$qryResult['msg'] = "Unable to save, please contact admin".$e;
+		echo json_encode($qryResult);
+		return;
+  }
+}
+
+// Papers portal
+if ((isset($_REQUEST['zproflag']))&&($_REQUEST['zproflag']==66990090))
+{
+	try {
+		$qryResult = array();
+		$qryResult['status'] = 1;
+		$qryResult['msg'] = "Failed to save!";
+		$pTitle=$_REQUEST['pTitle'];
+		$pURL=$_REQUEST['pURL'];
+		$pPublish=$_REQUEST['pPublish'];
+		$pDesc=$_REQUEST['pDesc'];
+		$totRecs=$_REQUEST['totalRows'];
+		$masterrowid = $_REQUEST["familyRow"];
+		$familyreg = "delete from projects_presented where link_family_family=?";
+		$stmt = $conn->prepare($familyreg);
+		$er = $stmt->execute([$masterrowid]);
+		for ($ij=0;$ij<$totRecs;$ij++)
+		{
+			$rec1 = explode("|",$pTitle)[$ij+1];
+			$rec2 = explode("|",$pURL)[$ij+1];
+			$rec3 = explode("|",$pPublish)[$ij+1];
+			$rec4 = explode("|",$pDesc)[$ij+1];
+			$familyreg = "insert into projects_presented (
+			link_family_family,title,url,dateofpublished,description) 
+			values (?,?,?,?,?)";
+			$stmt = $conn->prepare($familyreg);
+			$err=$stmt->execute([$masterrowid,$rec1,$rec2,$rec3,$rec4]);
+		}
+		$qryResult['status'] = 0;
+		$qryResult['msg'] = "Saved Successfully";
+		echo json_encode($qryResult);
+		return;
+		
+	}
+	catch(PDOException $e) {
+		$qryResult = array();
+		$qryResult['status'] = 1;
+		$qryResult['msg'] = "Unable to save, please contact admin".$e;
+		echo json_encode($qryResult);
+		return;
+  }
+}
+
+
+/// Patnent
+if ((isset($_REQUEST['zproflag']))&&($_REQUEST['zproflag']==110991212))
+{
+	try {
+		$qryResult = array();
+		$qryResult['status'] = 1;
+		$qryResult['msg'] = "Failed to save!";
+		$pTitle=$_REQUEST['pTitle'];
+		$pURL=$_REQUEST['pURL'];
+		$pPublish=$_REQUEST['pPublish'];
+		$pPatent=$_REQUEST['pPatent'];
+		$pDesc=$_REQUEST['pDesc'];
+		$totRecs=$_REQUEST['totalRows'];
+		$masterrowid = $_REQUEST["familyRow"];
+		$familyreg = "delete from patent_presented where link_family_family=?";
+		$stmt = $conn->prepare($familyreg);
+		$er = $stmt->execute([$masterrowid]);
+		for ($ij=0;$ij<$totRecs;$ij++)
+		{
+			$rec1 = explode("|",$pTitle)[$ij+1];
+			$rec2 = explode("|",$pURL)[$ij+1];
+			$rec3 = explode("|",$pPublish)[$ij+1];
+			$rec4 = explode("|",$pDesc)[$ij+1];
+			$rec5 = explode("|",$pDesc)[$ij+1];
+			$familyreg = "insert into patent_presented (
+			link_family_family,title,url,dateofpublished,pattern_number,description) 
+			values (?,?,?,?,?,?)";
+			$stmt = $conn->prepare($familyreg);
+			$err=$stmt->execute([$masterrowid,$rec1,$rec2,$rec3,$rec4,$rec5]);
+		}
+		$qryResult['status'] = 0;
+		$qryResult['msg'] = "Saved Successfully";
+		echo json_encode($qryResult);
+		return;
+		
+	}
+	catch(PDOException $e) {
+		$qryResult = array();
+		$qryResult['status'] = 1;
+		$qryResult['msg'] = "Unable to save, please contact admin".$e;
+		echo json_encode($qryResult);
+		return;
+  }
+}
+
+
+
+
+
+
 if ((isset($_REQUEST['zproflag']))&&($_REQUEST['zproflag']==77665))
 {
   try

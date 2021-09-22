@@ -180,13 +180,13 @@ button.btn.active:focus {
             echo "Unable to process your request, contact admin";
             return;
           }
-		    $devCount = "select rowid,link_master_master,name,link_relation_relation,fathersname,dob,mobile,doorno,addline1,addline2,addline3,city,state,pincode,aaadhar,language,height from family where rowid=?";
+		    $devCount = "select rowid,link_master_master,name,link_relation_relation,fathersname,dob,mobile,doorno,addline1,addline2,addline3,city,state,pincode,aaadhar,language,height,preferredLoc,prefferedInd from family where rowid=?";
 			$stmt = $conn->prepare($devCount);
 			$stmt->execute([$edirow]);
 			$rec="^^^^^^^^^^^^^^^^^^^^^^^^^^^";
 			$profile_img="default.png";
 			if ($row = $stmt->fetch(PDO::FETCH_NUM, PDO::FETCH_ORI_NEXT)) {
-				$rec=$row[0]."^".$row[1]."^".$row[2]."^".$row[3]."^".$row[4]."^".$row[5]."^".$row[6]."^".$row[7]."^".$row[8]."^".$row[9]."^".$row[10]."^".$row[11]."^".$row[12]."^".$row[13]."^".$row[14]."^".$row[15]."^".$row[16];
+				$rec=$row[0]."^".$row[1]."^".$row[2]."^".$row[3]."^".$row[4]."^".$row[5]."^".$row[6]."^".$row[7]."^".$row[8]."^".$row[9]."^".$row[10]."^".$row[11]."^".$row[12]."^".$row[13]."^".$row[14]."^".$row[15]."^".$row[16]."^".$row[17]."^".$row[18];
 				$profImage = "select image_name from profile_image where family_rowid=? order by rowid desc";
 				$stmtimg = $conn->prepare($profImage);
 				$stmtimg->execute([$row[0]]);
@@ -278,9 +278,42 @@ button.btn.active:focus {
 			  <option value=3 <?php if ($pieces[3]==3) echo "selected"; ?>>Spouse</option>
 			  </select>
 			</div>
-			 <div class="form-group col-md-3">
+			  <div class="form-group col-md-3">
 			 <label for="inputState">Photo</label>
 				<input type="file" name="imgInp" accept="image/*" class="form-control" id="imgInp" value="<?php echo $pieces[1]; ?>">
+			</div>
+		  </div>
+		  <div class="form-row">
+	
+			<div class="form-group col-md-3">
+			  <label for="inputCity">Preferred Industry</label>
+			  <select id="pIndustry" multiple="multiple" class="form-control">
+					<option value="1" <?php if (strpos($pieces[18],"1")>0) echo "selected"; ?>>Information Technology</option>
+					<option value="2" <?php if (strpos($pieces[18],"2")>0) echo "selected"; ?>>Hardware</option>
+					<option value="3" <?php if (strpos($pieces[18],"3")>0) echo "selected"; ?>>Legal</option>
+					<option value="4" <?php if (strpos($pieces[18],"4")>0) echo "selected"; ?>>Pharmaceutical</option>
+					<option value="5" <?php if (strpos($pieces[18],"5")>0) echo "selected"; ?>>Sales</option>
+					<option value="6" <?php if (strpos($pieces[18],"6")>0) echo "selected"; ?>>Marketing</option>
+					<option value="7" <?php if (strpos($pieces[18],"7")>0) echo "selected"; ?>>Finance</option>
+				</select>
+			</div>
+			<div class="form-group col-md-3">
+			 <label for="inputState">Preferred Work Location</label>
+				<select id="pWorkLoc" multiple="multiple" class="form-control">
+					<option value="1" <?php if (strpos($pieces[17],"1")>0) echo "selected"; ?>>Chennai</option>
+					<option value="2" <?php if (strpos($pieces[17],"2")>0) echo "selected"; ?>>Coimbatore</option>
+					<option value="3" <?php if (strpos($pieces[17],"3")>0) echo "selected"; ?>>Bangalore</option>
+					<option value="4" <?php if (strpos($pieces[17],"4")>0) echo "selected"; ?>>Madurai</option>
+					<option value="5" <?php if (strpos($pieces[17],"5")>0) echo "selected"; ?>>Trichy</option>
+					<option value="6" <?php if (strpos($pieces[17],"6")>0) echo "selected"; ?>>Outside TamilNadu</option>
+				</select>
+			</div>
+			<div class="form-group col-md-3">
+			  
+			  
+			</div>
+			<div class="form-group col-md-3" style="padding-left:120px">
+				<span id="profImage"><img id="blah" width="150px" height="130px" src="profile_images/<?php echo $profile_img; ?>" ></span>
 			</div>
 		  </div>
 		  <div class="form-row">
@@ -288,9 +321,7 @@ button.btn.active:focus {
 			<button type="button" class="btn btn-next">Save</button>
 			<button type="button" class="btn btn-cancel">Cancel</button>
 			</div>
-			<div class="form-group col-md-4" style="padding-left:120px">
-				<span id="profImage"><img id="blah" width="150px" height="130px" src="profile_images/<?php echo $profile_img; ?>" ></span>
-			</div>
+			
 		  </div>
 		  <div class="form-row">
 		
@@ -359,6 +390,10 @@ button.btn.active:focus {
 	$('#pHeight').css("border", "1px solid black");
 	$('#pRelation').css("border", "1px solid black");
 	$('#imgInp').css("border", "1px solid black");
+	$('#pIndustry').css("border", "1px solid black");
+	$('#pWorkLoc').css("border", "1px solid black");
+
+	 
 	
 	// fetch value
 	
@@ -377,7 +412,10 @@ button.btn.active:focus {
 	pLanguage=$('#pLanguage').val();
 	pHeight=$('#pHeight').val();
 	pRelation=$('#pRelation').val();
-
+	pIndustry = $('#pIndustry').val(); 
+	pWorkLoc = $('#pWorkLoc').val(); 
+	
+	
 	if (pName=="") {  $('#pName').css("border", "1px solid red"); ferror=1}
 	if (pFName=="") {  $('#pFName').css("border", "1px solid red"); ferror=1}
 	if (pDOB=="") {  $('#pDOB').css("border", "1px solid red"); ferror=1}
@@ -396,7 +434,17 @@ button.btn.active:focus {
 	{
 		if ($('#imgInp')[0].files.length==0) {  $('#imgInp').css("border", "1px solid red"); ferror=1}
 	}
-
+	totSelectInd="";
+	$('#pIndustry :selected').each(function(){
+		totSelectInd=totSelectInd+$(this).val();
+    });
+	totSelectLoc="";
+	$('#pWorkLoc :selected').each(function(){
+		totSelectLoc=totSelectLoc+$(this).val();
+    });
+	if (totSelectLoc=="") {  $('#pWorkLoc').css("border", "1px solid red"); ferror=1; }
+	if (totSelectInd=="") {  $('#pIndustry').css("border", "1px solid red"); ferror=1; }
+	
     if (ferror) {
 		var x = document.getElementById("snackbar");
 		x.className = "show";
@@ -426,6 +474,8 @@ button.btn.active:focus {
 			'pLanguage' : pLanguage,
 			'pHeight' : pHeight,
 			'pRelation' : pRelation,
+			'pWorkLoc' : "X"+totSelectLoc,
+			'pIndustry' : "X"+totSelectInd,
 			'updaterow' : updaterow,
 			'zproflag' : 109091
           },
@@ -659,6 +709,7 @@ function clearPrompts()
 	$('#pRelation').val(0);
 	$('#imgInp').val('');
 	$('#profImage').css('display', 'none');
+	
 }
 </script>
   </body>
