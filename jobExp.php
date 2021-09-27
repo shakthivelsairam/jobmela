@@ -1,10 +1,5 @@
 <?php
 require "session_user_utils.php";
-if (!(isset($_SESSION["isLogin"])))
-{
-  $url = './error-page.php';
-  header("location: ".$url); // for two folders
-}
 $edirow=0;
 if (isset($_REQUEST['sessionid']))
 {
@@ -204,9 +199,9 @@ button.btn.active:focus {
 				///print_r($p);
 				?>
 		  <span class="removeRow" id="removeRow" name="removeRow">
-			<div class="col-xs-1 small-txt-box" style="width:5%">
-			 <label for="inputCity">S.No</label>
-			<input type="text" name="pSno" id="pSno" class="form-control" placeholder="S.No"  value="<?php echo $k+1; ?>" />  
+			<div class="col-xs-1 small-txt-box" style="width:0%">
+			 <label for="inputCity"></label>
+			<input type="hidden" name="pSno" id="pSno" class="form-control" placeholder="S.No"  value="<?php echo $k+1; ?>" />  
 			</div>
 			<div class="col-xs-2 small-txt-box">
 			 <label for="inputCity">Job Title</label>
@@ -220,7 +215,7 @@ button.btn.active:focus {
 			<label for="inputCity">City/District</label>
 			<input type="text" name="pCollege" id="pCollege" value="<?php echo $p[4]; ?>" class="form-control" placeholder="District"  />                        
 			</div>
-			<div class="col-xs-2 small-txt-box" style="width:12%">
+			<div class="col-xs-2 small-txt-box" style="width:18%">
 			<label for="inputCity">Description</label>
 			<input type="text" name="pDistrict" id="pDistrict" value="<?php echo $p[5]; ?>" class="form-control" placeholder="Description"  />                        
 			</div>
@@ -279,21 +274,21 @@ button.btn.active:focus {
 	<script>
 	var totRows="<?php echo $k; ?>";
 	totRows=Number(totRows);
-	var singRow = '<span class="removeRow" id="removeRow" name="removeRow"><br><br><br><br> <div class="col-xs-1 small-txt-box" style="width:5%">';
-	singRow = singRow+'<label for="inputCity">S.No</label><input type="text" name="pSno" id="pSno" class="form-control" placeholder="S.No"  value="" />  ';
+	var singRow = '<span class="removeRow" id="removeRow" name="removeRow"><br><br><br><br> <div class="col-xs-1 small-txt-box" style="width:0%">';
+	singRow = singRow+'<label for="inputCity"></label><input type="hidden" name="pSno" id="pSno" class="form-control" placeholder="S.No"  value="" />  ';
 	singRow = singRow+'</div><div class="col-xs-2 small-txt-box"><label for="inputCity">job Title</label><input type="text" name="pEduLevel" id="pEduLevel" class="form-control" placeholder="Job Title"  value="" /> ';
 	singRow = singRow+'</div><div class="col-xs-2 small-txt-box" style="width:17%"><label for="inputCity">Company</label>';
 	singRow = singRow+'<input type="text" name="pFieldStudy" id="pFieldStudy" value="" class="form-control" placeholder="Company"  />';                        
 	singRow = singRow+'</div><div class="col-xs-2 small-txt-box" style="width:13%"><label for="inputCity">City/District</label>';
 	singRow = singRow+'<input type="text" name="pCollege" id="pCollege" value="" class="form-control" placeholder="City/District"  /></div>';
-	singRow = singRow+'<div class="col-xs-2 small-txt-box" style="width:12%">';
+	singRow = singRow+'<div class="col-xs-2 small-txt-box" style="width:18%">';
 	singRow = singRow+'<label for="inputCity">Description</label>';
 	singRow = singRow+'<input type="text" name="pDistrict" id="pDistrict" value="" class="form-control" placeholder="Description"  /></div>';
 	singRow = singRow+'<div class="col-xs-2 small-txt-box" style="width:12.5%"><label for="inputCity">From date</label>';
 	singRow = singRow+'<input type="date" name="pFromDate" id="pFromDate" value="" class="form-control" max="<?php echo date("Y-m-d"); ?>"  placeholder="Last Name"  /></div>';
 	singRow = singRow+'<div class="col-xs-2 small-txt-box" style="width:12.5%"><label for="inputCity">To date</label>';
 	singRow = singRow+'<input type="date" name="pToDate" id="pToDate" value="" class="form-control" max="<?php echo date("Y-m-d"); ?>"  placeholder="Last Name"  /></div>';
-	singRow = singRow+'<div class="col-xs-1 small-txt-box purshingDiv" style="width:5%"><label for="inputCity">Purshing</label>';
+	singRow = singRow+'<div class="col-xs-1 small-txt-box purshingDiv" style="width:8%"><label for="inputCity">Working here</label>';
 	singRow = singRow+'<input type="checkbox" name="pPurshing" id="pPurshing" style="height:20px;margin-top:8px;width:40%" id="pPurshing"/>';
 	singRow = singRow+'&nbsp;&nbsp;&nbsp;<img src="assets/img/delete_icon.png" onClick="fDelRow(this)" style="vertical-align: baseline;" heigth="20px" width="20px"></div></span>';
 
@@ -334,7 +329,7 @@ button.btn.active:focus {
 		
 		
 		
-		if (pSno[rownum].value=="") { pSno[rownum].style.border="1px solid red"; isEmpty=1; }
+		// if (pSno[rownum].value=="") { pSno[rownum].style.border="1px solid red"; isEmpty=1; }
 		if (pEduLevel[rownum].value=="") { pEduLevel[rownum].style.border="1px solid red"; isEmpty=1; }
 		if (pFieldStudy[rownum].value=="") { pFieldStudy[rownum].style.border="1px solid red"; isEmpty=1; }
 		if (pCollege[rownum].value=="") { pCollege[rownum].style.border="1px solid red"; isEmpty=1; }
@@ -444,11 +439,13 @@ button.btn.active:focus {
           dataType:'json',
           success : function(data) {
 			  //alert(data['msg']);
-			  var x = document.getElementById("snackbar");
-				x.className = "show";
-				setTimeout(function(){ x.className = x.className.replace("show", ""); }, 4000);
+			   window.location.href="admin.php";
+				  return;
               if (data['status']==0)
               {
+				  var x = document.getElementById("snackbar");
+				x.className = "show";
+				setTimeout(function(){ x.className = x.className.replace("show", ""); }, 4000);
 				   $("#snackbar").html('Saved Successfully..!');
 						$("#snackbar").css('background-color','#87C261');
 						$("#snackbar").css('color','#FFFFFF');

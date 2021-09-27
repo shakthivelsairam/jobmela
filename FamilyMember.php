@@ -1,10 +1,5 @@
 <?php
 require "session_user_utils.php";
-if (!(isset($_SESSION["isLogin"])))
-{
-  $url = './error-page.php';
-  header("location: ".$url); // for two folders
-}
 $edirow=0;
 if (isset($_REQUEST['sessionid']))
 {
@@ -25,7 +20,7 @@ if (isset($_REQUEST['sessionid']))
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
     
-    <title>Portal</title>
+    <title>Job Portal</title>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- Bootstrap core CSS -->
     <link href="https://getbootstrap.com/docs/3.4/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -180,26 +175,24 @@ button.btn.active:focus {
             echo "Unable to process your request, contact admin";
             return;
           }
-		    $devCount = "select rowid,link_master_master,name,link_relation_relation,fathersname,dob,mobile,doorno,addline1,addline2,addline3,city,state,pincode,aaadhar,language,height,preferredLoc,prefferedInd from family where rowid=?";
+		    $devCount = "select rowid,link_master_master,name,link_relation_relation,fathersname,dob,mobile,doorno,addline1,addline2,addline3,city,state,pincode,aaadhar,language,height,preferredLoc,prefferedInd,gpfno,rank,gradeno,station,fathermobile,link_district_district from family where rowid=?";
 			$stmt = $conn->prepare($devCount);
 			$stmt->execute([$edirow]);
 			$rec="^^^^^^^^^^^^^^^^^^^^^^^^^^^";
 			$profile_img="default.png";
+			$profile_pdf="";
 			if ($row = $stmt->fetch(PDO::FETCH_NUM, PDO::FETCH_ORI_NEXT)) {
-				$rec=$row[0]."^".$row[1]."^".$row[2]."^".$row[3]."^".$row[4]."^".$row[5]."^".$row[6]."^".$row[7]."^".$row[8]."^".$row[9]."^".$row[10]."^".$row[11]."^".$row[12]."^".$row[13]."^".$row[14]."^".$row[15]."^".$row[16]."^".$row[17]."^".$row[18];
-				$profImage = "select image_name from profile_image where family_rowid=? order by rowid desc";
+				$rec=$row[0]."^".$row[1]."^".$row[2]."^".$row[3]."^".$row[4]."^".$row[5]."^".$row[6]."^".$row[7]."^".$row[8]."^".$row[9]."^".$row[10]."^".$row[11]."^".$row[12]."^".$row[13]."^".$row[14]."^".$row[15]."^".$row[16]."^".$row[17]."^".$row[18]."^".$row[19]."^".$row[20]."^".$row[21]."^".$row[22]."^".$row[23]."^".$row[24];
+				$profImage = "select image_name,resume from profile_image where family_rowid=? order by rowid desc";
 				$stmtimg = $conn->prepare($profImage);
 				$stmtimg->execute([$row[0]]);
-				$profile_img="";
-				if ($rowimg = $stmtimg->fetch(PDO::FETCH_NUM, PDO::FETCH_ORI_NEXT))  $profile_img=$rowimg[0];
-				
+				if ($rowimg = $stmtimg->fetch(PDO::FETCH_NUM, PDO::FETCH_ORI_NEXT))  { $profile_img=$rowimg[0]; $profile_pdf=$rowimg[1]; }
 			}
 			$pieces = explode("^", $rec);
-		
 		  ?>
 		  <br/>
 		
-		  <fieldset style="display:block">
+		  <fieldset style="display:block" class="afterSave">
 		  </br>
 		  <h3>Basic Information</h3>
 		  <div class="form-row">
@@ -239,7 +232,8 @@ button.btn.active:focus {
 				<input type="text" class="form-control" id="pAddLine3" value="<?php echo $pieces[10]; ?>">
 			</div>
 		  </div>
-			
+
+
 			<div class="form-row">
 			<div class="form-group col-md-3">
 			 <label for="inputState">Pin Code</label>
@@ -259,7 +253,7 @@ button.btn.active:focus {
 				<input type="number" class="form-control" id="pAadhar" value="<?php echo $pieces[14]; ?>">
 			</div>
 		  </div>
-		
+				
 		<div class="form-row">
 			<div class="form-group col-md-3">
 			  <label for="inputCity">Languages Known</label>
@@ -279,47 +273,123 @@ button.btn.active:focus {
 			  </select>
 			</div>
 			  <div class="form-group col-md-3">
-			 <label for="inputState">Photo</label>
-				<input type="file" name="imgInp" accept="image/*" class="form-control" id="imgInp" value="<?php echo $pieces[1]; ?>">
+			 <label for="inputState">District</label>
+				<select id="pDistrict" class="form-control" name="pDistrict">
+				<option value=0>--Select--</option>
+				<?php
+				 $devCoun1t = "select rowid,name from district";
+				$stmt23 = $conn->prepare($devCoun1t);
+				$stmt23->execute();
+				while ($rowx = $stmt23->fetch(PDO::FETCH_NUM, PDO::FETCH_ORI_NEXT)) 
+				{
+					?> <option value="<?php echo $rowx[0]; ?>" <?php if ($rowx[0]==$pieces[24]) echo "selected"; ?>><?php echo $rowx[1]; ?></option> <?php
+				}
+				?>
+				</select>
 			</div>
 		  </div>
 		  <div class="form-row">
 	
 			<div class="form-group col-md-3">
-			  <label for="inputCity">Preferred Industry</label>
-			  <select id="pIndustry" multiple="multiple" class="form-control">
-					<option value="1" <?php if (strpos($pieces[18],"1")>0) echo "selected"; ?>>Information Technology</option>
-					<option value="2" <?php if (strpos($pieces[18],"2")>0) echo "selected"; ?>>Hardware</option>
-					<option value="3" <?php if (strpos($pieces[18],"3")>0) echo "selected"; ?>>Legal</option>
-					<option value="4" <?php if (strpos($pieces[18],"4")>0) echo "selected"; ?>>Pharmaceutical</option>
-					<option value="5" <?php if (strpos($pieces[18],"5")>0) echo "selected"; ?>>Sales</option>
-					<option value="6" <?php if (strpos($pieces[18],"6")>0) echo "selected"; ?>>Marketing</option>
-					<option value="7" <?php if (strpos($pieces[18],"7")>0) echo "selected"; ?>>Finance</option>
-				</select>
+			  <label for="inputCity">Preferred Industry</label> <br/>
+			  <span id="pIndustryAll" class="pIndustryAll">
+			  <input type="checkbox" value="1" <?php if (strpos($pieces[18],"1")>0) echo "checked"; ?> name="pIndustry" id="pIndustry">&nbsp; Information Technology</br>
+			  <input type="checkbox" value="2" <?php if (strpos($pieces[18],"2")>0) echo "checked"; ?> name="pIndustry" id="pIndustry">&nbsp; Hardware</br>
+			  <input type="checkbox" value="3" <?php if (strpos($pieces[18],"3")>0) echo "checked"; ?> name="pIndustry" id="pIndustry">&nbsp; Legal</br>
+			  <input type="checkbox" value="4" <?php if (strpos($pieces[18],"4")>0) echo "checked"; ?> name="pIndustry" id="pIndustry">&nbsp; Pharmaceutical</br>
+			  <input type="checkbox" value="5" <?php if (strpos($pieces[18],"5")>0) echo "checked"; ?> name="pIndustry" id="pIndustry">&nbsp; Sales</br>
+			  <input type="checkbox" value="6" <?php if (strpos($pieces[18],"6")>0) echo "checked"; ?> name="pIndustry" id="pIndustry">&nbsp; Marketing</br>
+			  <input type="checkbox" value="7" <?php if (strpos($pieces[18],"7")>0) echo "checked"; ?> name="pIndustry" id="pIndustry">&nbsp; Finance
+			  </span>
 			</div>
 			<div class="form-group col-md-3">
-			 <label for="inputState">Preferred Work Location</label>
-				<select id="pWorkLoc" multiple="multiple" class="form-control">
-					<option value="1" <?php if (strpos($pieces[17],"1")>0) echo "selected"; ?>>Chennai</option>
-					<option value="2" <?php if (strpos($pieces[17],"2")>0) echo "selected"; ?>>Coimbatore</option>
-					<option value="3" <?php if (strpos($pieces[17],"3")>0) echo "selected"; ?>>Bangalore</option>
-					<option value="4" <?php if (strpos($pieces[17],"4")>0) echo "selected"; ?>>Madurai</option>
-					<option value="5" <?php if (strpos($pieces[17],"5")>0) echo "selected"; ?>>Trichy</option>
-					<option value="6" <?php if (strpos($pieces[17],"6")>0) echo "selected"; ?>>Outside TamilNadu</option>
-				</select>
+			 <label for="inputState">Preferred Work Location 1</label> <br/>
+			 <select id="pWorkLoc1" class="form-control" name="pWorkLoc1">
+				<option value=0>--Select--</option>
+			 <?php
+				if ($pieces[17]=="") $pieces[17]="||";
+				$wl=explode("|",$pieces[17]);
+				$stmt23->execute();
+				while ($rowx = $stmt23->fetch(PDO::FETCH_NUM, PDO::FETCH_ORI_NEXT)) 
+				{
+					?> <option value="<?php echo $rowx[0]; ?>" <?php if ($wl[0]==$rowx[0]) echo "selected"; ?>><?php echo $rowx[1]; ?></option> <?php
+				}
+			 ?>
+			 </select>
+			  <br/>
+			 <label for="inputState">Preferred Work Location 2</label> <br/>
+			 <select id="pWorkLoc2" class="form-control" name="pWorkLoc2">
+				<option value=0>--Select--</option>
+			 <?php
+				$stmt23->execute();
+				while ($rowx = $stmt23->fetch(PDO::FETCH_NUM, PDO::FETCH_ORI_NEXT)) 
+				{
+					?> <option value="<?php echo $rowx[0]; ?>" <?php if ($wl[1]==$rowx[0]) echo "selected"; ?>><?php echo $rowx[1]; ?></option> <?php
+				}
+			 ?>
+			 </select>
+			  <br/>
+			 <label for="inputState">Preferred Work Location 3</label> <br/>
+			 <select id="pWorkLoc3" class="form-control" name="pWorkLoc3">
+				<option value=0>--Select--</option>
+			 <?php
+				$stmt23->execute();
+				while ($rowx = $stmt23->fetch(PDO::FETCH_NUM, PDO::FETCH_ORI_NEXT)) 
+				{
+					?> <option value="<?php echo $rowx[0]; ?>" <?php if ($wl[2]==$rowx[0]) echo "selected"; ?>><?php echo $rowx[1]; ?></option> <?php
+				}
+			 ?>
+			 </select>
 			</div>
 			<div class="form-group col-md-3">
-			  
-			  
+			   <label for="inputState">Father's GPF Number</label>
+				<input type="number" class="form-control" id="pFatherGPFNo" value="<?php echo $pieces[19]; ?>">
+				<br/>
+				<label for="inputState">Father's Grade Number</label>
+				<input type="text" class="form-control" id="pFatherGradeNo" value="<?php echo $pieces[21]; ?>">
+				<br/>
+				 <label for="inputState">Father's Mobile Number</label>
+				<input type="number" class="form-control" id="pFatherMobile" value="<?php echo $pieces[23]; ?>">
 			</div>
-			<div class="form-group col-md-3" style="padding-left:120px">
-				<span id="profImage"><img id="blah" width="150px" height="130px" src="profile_images/<?php echo $profile_img; ?>" ></span>
+			<div class="form-group col-md-3">
+				 <label for="inputCity">Father's Rank</label>
+			  <input type="text" class="form-control" id="pFatherRank" value="<?php echo $pieces[20]; ?>">
+			  <br/>
+			   <label for="inputState">Father's Station</label>
+				<input type="text" class="form-control" id="pFatherStation" value="<?php echo $pieces[22]; ?>">
 			</div>
 		  </div>
+			
+		<div class="form-row">
+			<div class="form-group col-md-3">
+			 <label for="inputState">Resume [Max size: 2MB]</label>
+			  <input type="file" name="pResume" accept="application/pdf" class="form-control" id="pResume">
+			  
+			</div>
+		  </div>
+		<div class="form-row">
+			<div class="form-group col-md-3">
+			</div>
+			<div class="form-group col-md-3">
+			 <label for="inputState">Photo [Max size: 1MB]</label>
+			<input type="file" name="imgInp" accept="image/*" class="form-control" id="imgInp" value="<?php echo $pieces[1]; ?>">
+			</div>
+			<div class="form-group col-md-3">
+				<span id="profImage"><img id="blah" width="150px" height="130px" src="profile_images/<?php echo $profile_img; ?>" ></span>
+			</div>
+			<div class="form-group col-md-3">
+			 <label for="inputState"><br/><br/><br/></label> 
+				 <button type="button" class="btn btn-next">Save</button>
+				<button type="button" class="btn btn-cancel">Cancel</button>
+			</div>
+			<div class="form-group col-md-3">
+			   <label><span id="uploadResume"><?php echo $profile_pdf; ?></span></label>
+			</div>
+		  </div>
+		  
 		  <div class="form-row">
 		  <div class="form-group col-md-8">
-			<button type="button" class="btn btn-next">Save</button>
-			<button type="button" class="btn btn-cancel">Cancel</button>
+			
 			</div>
 			
 		  </div>
@@ -390,10 +460,19 @@ button.btn.active:focus {
 	$('#pHeight').css("border", "1px solid black");
 	$('#pRelation').css("border", "1px solid black");
 	$('#imgInp').css("border", "1px solid black");
-	$('#pIndustry').css("border", "1px solid black");
-	$('#pWorkLoc').css("border", "1px solid black");
-
-	 
+	$('#pIndustryAll').css("border", "0px solid black");
+	$('#pWorkLoc1').css("border", "0px solid black");
+	$('#pWorkLoc2').css("border", "0px solid black");
+	$('#pWorkLoc3').css("border", "0px solid black");
+	// New fields
+	$('#pResume').css("border", "0px solid black");
+	$('#pFatherGPFNo').css("border", "1px solid black");
+	$('#pFatherRank').css("border", "1px solid black");
+	$('#pFatherGradeNo').css("border", "1px solid black");
+	$('#pFatherStation').css("border", "1px solid black");
+	$('#pFatherMobile').css("border", "1px solid black");
+	$('#pDistrict').css("border", "1px solid black");
+	
 	
 	// fetch value
 	
@@ -412,14 +491,26 @@ button.btn.active:focus {
 	pLanguage=$('#pLanguage').val();
 	pHeight=$('#pHeight').val();
 	pRelation=$('#pRelation').val();
-	pIndustry = $('#pIndustry').val(); 
-	pWorkLoc = $('#pWorkLoc').val(); 
+	// pIndustry = $('#pIndustry').val(); 
+	// pWorkLoc = $('#pWorkLoc').val(); 
+	var pIndustry="";
+	$.each($("input[name='pIndustry']:checked"), function(){
+		pIndustry = pIndustry+"|"+$(this).val();
+	});
 	
+	var pWorkLoc=$('#pWorkLoc1').val()+"|"+$('#pWorkLoc2').val()+"|"+$('#pWorkLoc3').val();
+	pFatherGPFNo=$('#pFatherGPFNo').val();
+	pFatherRank=$('#pFatherRank').val();
+	pFatherGradeNo=$('#pFatherGradeNo').val();
+	pFatherStation=$('#pFatherStation').val();
+	pFatherMobile=$('#pFatherMobile').val();
+	pDistrict=$('#pDistrict').val();
 	
 	if (pName=="") {  $('#pName').css("border", "1px solid red"); ferror=1}
 	if (pFName=="") {  $('#pFName').css("border", "1px solid red"); ferror=1}
 	if (pDOB=="") {  $('#pDOB').css("border", "1px solid red"); ferror=1}
 	if (pMobile=="") {  $('#pMobile').css("border", "1px solid red"); ferror=1}
+	if (pMobile.length!=10) {  $('#pMobile').css("border", "1px solid red"); ferror=1}
 	if (pDoorNo=="") {  $('#pDoorNo').css("border", "1px solid red"); ferror=1}
 	if (pAddLine1=="") {  $('#pAddLine1').css("border", "1px solid red"); ferror=1}
 	if (pAddLine2=="") {  $('#pAddLine2').css("border", "1px solid red"); ferror=1}
@@ -433,17 +524,19 @@ button.btn.active:focus {
 	if (updaterow=="")
 	{
 		if ($('#imgInp')[0].files.length==0) {  $('#imgInp').css("border", "1px solid red"); ferror=1}
+		//if ($('#pResume')[0].files.length==0) {  $('#pResume').css("border", "1px solid red"); ferror=1}
 	}
-	totSelectInd="";
-	$('#pIndustry :selected').each(function(){
-		totSelectInd=totSelectInd+$(this).val();
-    });
-	totSelectLoc="";
-	$('#pWorkLoc :selected').each(function(){
-		totSelectLoc=totSelectLoc+$(this).val();
-    });
-	if (totSelectLoc=="") {  $('#pWorkLoc').css("border", "1px solid red"); ferror=1; }
-	if (totSelectInd=="") {  $('#pIndustry').css("border", "1px solid red"); ferror=1; }
+	if (($('#pWorkLoc1').val()==0)&&($('#pWorkLoc2').val()==0)&&($('#pWorkLoc3').val()==0)) {  $('#pWorkLoc1').css("border", "1px solid red"); ferror=1; }
+	if (pIndustry=="") {  $('#pIndustryAll').css("border", "1px solid red"); ferror=1; }
+	
+	if (pFatherGPFNo=="") {  $('#pFatherGPFNo').css("border", "1px solid red"); ferror=1; }
+	if (pFatherRank=="") {  $('#pFatherRank').css("border", "1px solid red"); ferror=1; }
+	if (pFatherGradeNo=="") {  $('#pFatherGradeNo').css("border", "1px solid red"); ferror=1; }
+	if (pFatherStation=="") {  $('#pFatherStation').css("border", "1px solid red"); ferror=1; }
+	if (pFatherMobile=="") {  $('#pFatherMobile').css("border", "1px solid red"); ferror=1; }
+	if (pFatherMobile.length!=10) {  $('#pFatherMobile').css("border", "1px solid red"); ferror=1; }
+	if (pDistrict==0) {  $('#pDistrict').css("border", "1px solid red"); ferror=1; }
+	
 	
     if (ferror) {
 		var x = document.getElementById("snackbar");
@@ -454,7 +547,13 @@ button.btn.active:focus {
 		setTimeout(function(){ x.className = x.className.replace("show", ""); }, 4000);
 		return false;
 	}
-		
+	var x = document.getElementById("snackbar");
+	x.className = "show";
+	$("#snackbar").html('Please wait.....');
+	$("#snackbar").css('background-color','#FAFD23');
+	$("#snackbar").css('color','#161615');
+	setTimeout(function(){ x.className = x.className.replace("show", ""); }, 5000);
+	
 		 $.ajax({
           url : 'login_ajax.php',
           type : 'POST',
@@ -474,8 +573,14 @@ button.btn.active:focus {
 			'pLanguage' : pLanguage,
 			'pHeight' : pHeight,
 			'pRelation' : pRelation,
-			'pWorkLoc' : "X"+totSelectLoc,
-			'pIndustry' : "X"+totSelectInd,
+			'pWorkLoc' : pWorkLoc,
+			'pIndustry' : pIndustry,
+			'pFatherGPFNo' : pFatherGPFNo,
+			'pFatherRank' : pFatherRank,
+			'pFatherGradeNo' : pFatherGradeNo,
+			'pFatherStation' : pFatherStation,
+			'pFatherMobile' : pFatherMobile,
+			'pDistrict' : pDistrict,
 			'updaterow' : updaterow,
 			'zproflag' : 109091
           },
@@ -484,18 +589,21 @@ button.btn.active:focus {
 			  if (data['status']==0)
               {
 				  // Upload image and then show save message
-				  if ($('#imgInp')[0].files.length==0)
+				  if (($('#imgInp')[0].files.length==0)&&($('#pResume')[0].files.length==0))
 				  {
-					  $("#snackbar").html('Saved Successfully..!');
+					    window.location.href="admin.php";
+						return;
+					    $("#snackbar").html('Saved Successfully..!');
 						$("#snackbar").css('background-color','#87C261');
 						$("#snackbar").css('color','#FFFFFF');
 				  }
 				  else
 				  {
 				 var property=$('#imgInp').prop('files')[0];
-				   //var property=$('#img').prop('files')[0];
+				 var resumeProp=$('#pResume').prop('files')[0];
 				  var form_data = new FormData();
 				  form_data.append("img",property); 
+				  form_data.append("res",resumeProp); 
 				  $.ajax({
 					 url:"upload_image.php",
 					 method:"POST",
@@ -505,6 +613,8 @@ button.btn.active:focus {
 					 processData:false,
 					 success:function(data)
 					 {
+						 window.location.href="admin.php";
+						 return;
 						$("#snackbar").html('Saved Successfully..!');
 						$("#snackbar").css('background-color','#87C261');
 						$("#snackbar").css('color','#FFFFFF');
@@ -534,7 +644,7 @@ button.btn.active:focus {
 				var x = document.getElementById("snackbar");
 				  x.className = "show";
 				  setTimeout(function(){ x.className = x.className.replace("show", ""); }, 4000);
-			  clearPrompts();
+					clearPrompts();
 			  
               
           },
@@ -601,95 +711,10 @@ button.btn.active:focus {
 });
   
 	
-	
-	
 	$('.btn-cancel').click(function() {
 	window.location.replace("admin.php");
 });
 
-$('.saveUpdate').click(function() {
-    var ferror = 0;
-	// gpfNo,pName,sltRank,adharNo,sltStation,dob,doj,doe
-    $('#gpfNo').css("border", "1px solid black");
-	$('#pName').css("border", "1px solid black");
-	$('#sltRank').css("border", "1px solid black");
-	$('#adharNo').css("border", "1px solid black");
-	$('#sltStation').css("border", "1px solid black");
-	$('#dob').css("border", "1px solid black");
-	$('#doj').css("border", "1px solid black");
-	$('#doe').css("border", "1px solid black");
-	$('#sltDept').css("border", "1px solid black");
-	
-	var gpfNo = $('#gpfNo').val();
-    var pName = $('#pName').val();
-	var sltRank = $('#sltRank').val();
-	var adharNo = $('#adharNo').val();
-	var sltStation = $('#sltStation').val();
-	var dob = $('#dob').val();
-	var doj = $('#doj').val();
-	var doe = $('#doe').val();
-	var sltDept = $('#sltDept').val();
-    if (gpfNo === '') {  $('#gpfNo').css("border", "1px solid red"); ferror=1}
-    if (pName === '') {  $('#pName').css("border", "1px solid red"); ferror=1}
-	if (sltRank == 0) {  $('#sltRank').css("border", "1px solid red"); ferror=1}
-	if (adharNo === '') {  $('#adharNo').css("border", "1px solid red"); ferror=1}
-	if (sltStation == 0) {  $('#sltStation').css("border", "1px solid red"); ferror=1}
-	if (dob === '') {  $('#dob').css("border", "1px solid red"); ferror=1}
-	if (doj === '') {  $('#doj').css("border", "1px solid red"); ferror=1}
-	if (doe === '') {  $('#doe').css("border", "1px solid red"); ferror=1}
-	if (sltDept === '') {  $('#sltDept').css("border", "1px solid red"); ferror=1}
-    if (ferror) return false;
-	
-	userrow = '<?php echo $edirow ;?>';
-	
-    //
-    // save the user details and trigger email
-    $.ajax({
-          url : 'login_ajax.php',
-          type : 'POST',
-          data : {
-              'gpfNo' : gpfNo,
-              'pName' : pName,
-			  'sltRank' : sltRank,
-			  'adharNo' : adharNo,
-			  'sltStation' : sltStation,
-			  'dob' : dob,
-			  'doj' : doj,
-			  'doe' : doe,
-			  'sltDept' : sltDept,
-			  'userrow' : userrow,
-              'zproflag' : 77665
-          },
-          dataType:'json',
-          success : function(data) {
-              if (data['status']==0)
-              {
-				$("#errormessage1").css('display', 'block');
-				$("#errormessage1").css('color', 'green');
-                $('#errormessage1').html(data['msg']);
-                $('#errormessage1').delay(6000).fadeOut();
-              }
-              else
-              {
-                $("#errormessage1").css('display', 'block');
-				$("#errormessage1").css('color', 'red');
-                $('#errormessage1').html(data['msg']);
-                $('#errormessage1').delay(6000).fadeOut();
-              }
-              // clearPrompts();
-          },
-          error : function(request,error)
-          {
-			   
-            $("#errormessage1").css('display', 'block');
-			$("#errormessage1").css('color', 'red');
-            $('#errormessage1').html("Failed to save, please contact admin");
-            $('#errormessage1').delay(6000).fadeOut();
-          }
-      });
-    //
-    return false;
-  });
 function clearPrompts()
 {
 	$('#pName').val('');
@@ -709,6 +734,22 @@ function clearPrompts()
 	$('#pRelation').val(0);
 	$('#imgInp').val('');
 	$('#profImage').css('display', 'none');
+	$('#uploadResume').css('display', 'none');
+	// New fields
+	$('#pResume').val('');
+	$('#pFatherGPFNo').val('');
+	$('#pFatherRank').val('');
+	$('#pFatherGradeNo').val('');
+	$('#pFatherStation').val('');
+	$('#pFatherMobile').val('');
+	$('#pDistrict').val(0);
+	$.each($("input[name='pIndustry']"), function(){
+		$(this).attr('checked',false);
+	});
+	$.each($("input[name='pWorkLoc']"), function(){
+		$(this).attr('checked',false);
+	});
+	
 	
 }
 </script>

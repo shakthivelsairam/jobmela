@@ -1,10 +1,5 @@
 <?php
 require "session_user_utils.php";
-if (!(isset($_SESSION["isLogin"])))
-{
-  $url = './error-page.php';
-  header("location: ".$url); // for two folders
-}
 $edirow=0;
 if (isset($_REQUEST['sessionid']))
 {
@@ -204,9 +199,9 @@ button.btn.active:focus {
 				//print_r($p);
 				?>
 		  <span class="removeRow" id="removeRow" name="removeRow">
-			<div class="col-xs-1 small-txt-box">
-			 <label for="inputCity">S.No</label>
-			<input type="text" name="pSno" id="pSno" class="form-control" placeholder="S.No"  value="<?php echo $k+1; ?>" />  
+			<div class="col-xs-1 small-txt-box" style="width:0%">
+			 <label for="inputCity"></label>
+			<input type="hidden" name="pSno" id="pSno" class="form-control" placeholder="S.No"  value="<?php echo $k+1; ?>" />  
 			</div>
 			<div class="col-xs-2 small-txt-box">
 			 <label for="inputCity">Title</label>
@@ -216,7 +211,7 @@ button.btn.active:focus {
 			<label for="inputCity">URL</label>
 			<input type="text" name="pURL" id="pURL" value="<?php echo $p[3]; ?>" class="form-control" placeholder="URL"  />                        
 			</div>
-			<div class="col-xs-2 small-txt-box" style="width:11%">
+			<div class="col-xs-2 small-txt-box" style="width:13%">
 			<label for="inputCity">Date Published</label>
 			<input type="date" name="pDatePublish" id="pDatePublish" value="<?php echo $p[4]; ?>" class="form-control"  placeholder="Description"  />                        
 			</div>
@@ -277,11 +272,11 @@ button.btn.active:focus {
 	<script>
 	var totRows="<?php echo $k; ?>";
 	totRows=Number(totRows);
-	var singRow = '<span class="removeRow" id="removeRow" name="removeRow"><br><br><br><br> <div class="col-xs-1 small-txt-box">';
-	singRow = singRow+'<label for="inputCity">S.No</label><input type="text" name="pSno" id="pSno" class="form-control" placeholder="S.No"  value="" />  ';
+	var singRow = '<span class="removeRow" id="removeRow" name="removeRow"><br><br><br><br> <div class="col-xs-1 small-txt-box" style="width:0%">';
+	singRow = singRow+'<label for="inputCity"></label><input type="hidden" name="pSno" id="pSno" class="form-control" placeholder="S.No"  value="" />  ';
 	singRow = singRow+'</div><div class="col-xs-2 small-txt-box"><label for="inputCity">Title</label><input type="text" name="pTitle" id="pTitle" class="form-control" placeholder="Title"  value="" /></div><div class="col-xs-2 small-txt-box"><label for="inputCity">URL</label>';
 	singRow = singRow+'<input type="text" name="pURL" id="pURL" class="form-control" placeholder=""  value="" />  </div>';
-	singRow = singRow+'<div class="col-xs-2 small-txt-box" style="width:11%"><label for="inputCity">Date Published</label>';
+	singRow = singRow+'<div class="col-xs-2 small-txt-box" style="width:13%"><label for="inputCity">Date Published</label>';
 	singRow = singRow+'<input type="date" name="pDatePublish" id="pDatePublish" class="form-control" placeholder="Description" value="" />  </div>';
 	singRow = singRow+'<div class="col-xs-1 small-txt-box"><label for="inputCity">Patent Number</label><input type="text" name="pPatent" id="pPatent" class="form-control" placeholder="Patent number"/>  </div>';
 	singRow = singRow+'<div class="col-xs-3 small-txt-box"><label for="inputCity">Description</label>	<input type="text" name="pDesc" id="pDesc" class="form-control" placeholder="Description"  value="" />  			</div>';
@@ -325,7 +320,7 @@ button.btn.active:focus {
 		pPatent[rownum].style.border="1px solid #ccc";
 		pDesc[rownum].style.border="1px solid #ccc";
 		
-		if (pSno[rownum].value=="") { pSno[rownum].style.border="1px solid red"; isEmpty=1; }
+		//if (pSno[rownum].value=="") { pSno[rownum].style.border="1px solid red"; isEmpty=1; }
 		if (pTitle[rownum].value=="") { pTitle[rownum].style.border="1px solid red"; isEmpty=1; }
 		if (pURL[rownum].value=="") { pURL[rownum].style.border="1px solid red"; isEmpty=1; }
 		if (pDatePublish[rownum].value=="") { pDatePublish[rownum].style.border="1px solid red"; isEmpty=1; }
@@ -415,6 +410,8 @@ button.btn.active:focus {
           dataType:'json',
           success : function(data) {
 			  ////alert(data['msg']);
+				window.location.href="admin.php";
+				return;
 			  var x = document.getElementById("snackbar");
 				x.className = "show";
 				setTimeout(function(){ x.className = x.className.replace("show", ""); }, 4000);

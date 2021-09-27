@@ -1,10 +1,5 @@
 <?php
 require "session_user_utils.php";
-if (!(isset($_SESSION["isLogin"])))
-{
-  $url = './error-page.php';
-  header("location: ".$url); // for two folders
-}
 $edirow=0;
 if (isset($_REQUEST['sessionid']))
 {
@@ -204,9 +199,9 @@ button.btn.active:focus {
 				//print_r($p);
 				?>
 		  <span class="removeRow" id="removeRow" name="removeRow">
-			<div class="col-xs-1 small-txt-box">
-			 <label for="inputCity">S.No</label>
-			<input type="text" name="pSno" id="pSno" class="form-control" placeholder="S.No"  value="<?php echo $k+1; ?>" />  
+			<div class="col-xs-1 small-txt-box" style="width:0%">
+			 <label for="inputCity"></label>
+			<input type="hidden" name="pSno" id="pSno" class="form-control" placeholder="S.No"  value="<?php echo $k+1; ?>" />  
 			</div>
 			<div class="col-xs-3 small-txt-box">
 			 <label for="inputCity">Title</label>
@@ -284,8 +279,8 @@ button.btn.active:focus {
 	<script>
 	var totRows="<?php echo $k; ?>";
 	totRows=Number(totRows);
-	var singRow = '<span class="removeRow" id="removeRow" name="removeRow"><br><br><br><br> <div class="col-xs-1 small-txt-box">';
-	singRow = singRow+'<label for="inputCity">S.No</label><input type="text" name="pSno" id="pSno" class="form-control" placeholder="S.No"  value="" />  ';
+	var singRow = '<span class="removeRow" id="removeRow" name="removeRow"><br><br><br><br> <div class="col-xs-1 small-txt-box" style="width:0%">';
+	singRow = singRow+'<label for="inputCity"></label><input type="hidden" name="pSno" id="pSno" class="form-control" placeholder="S.No"  value="" />  ';
 	singRow = singRow+'</div><div class="col-xs-3 small-txt-box"><label for="inputCity">Title</label><select id="pTitle" class="form-control" name="pTitle">';
 	singRow = singRow+'<option value=0>--Select--</option>';
 	<?php
@@ -303,7 +298,7 @@ button.btn.active:focus {
 	singRow = singRow+'<input type="date" name="pAwardedDate" id="pAwardedDate" class="form-control" placeholder=""  value="" max="<?php echo date("Y-m-d"); ?>" />  </div>';
 	singRow = singRow+'<div class="col-xs-2 small-txt-box"><label for="inputCity">Expiry</label>';
 	singRow = singRow+'<input type="date" name="pExpiryDate" id="pExpiryDate" class="form-control" min="<?php echo date("Y-m-d"); ?>" placeholder="Description" value="" />  </div>';
-	singRow = singRow+'<div class="col-xs-2 small-txt-box"><label for="inputCity">Never Expiry</label>	<input type="checkbox" name="pNeverExpiry" id="pNeverExpiry" class="form-control" style="box-shadow:0px;height:20px;margin-top:8px;width:40%"/>			</div>';
+	singRow = singRow+'<div class="col-xs-1 small-txt-box"><label for="inputCity">Never Expiry</label>	<input type="checkbox" name="pNeverExpiry" id="pNeverExpiry" class="form-control" style="box-shadow:0px;height:20px;margin-top:8px;width:40%"/>			</div>';
 	singRow = singRow+'<div class="col-xs-1 small-txt-box"><label for="inputCity"><br></br></br></label> &nbsp;&nbsp;<img src="assets/img/delete_icon.png" onClick="fDelRow(this)" style="vertical-align: baseline;" heigth="20px" width="20px"></div>';
 	
 	
@@ -340,7 +335,7 @@ button.btn.active:focus {
 		pExpiryDate[rownum].style.border="1px solid #ccc";
 		pNeverExpiry[rownum].style.border="1px solid #ccc";
 		
-		if (pSno[rownum].value=="") { pSno[rownum].style.border="1px solid red"; isEmpty=1; }
+		//if (pSno[rownum].value=="") { pSno[rownum].style.border="1px solid red"; isEmpty=1; }
 		if (pTitle[rownum].value==0) { pTitle[rownum].style.border="1px solid red"; isEmpty=1; }
 		if (pAwardedDate[rownum].value=="") { pAwardedDate[rownum].style.border="1px solid red"; isEmpty=1; }
 		if (pExpiryDate[rownum].value=="") 
@@ -439,6 +434,8 @@ button.btn.active:focus {
           dataType:'json',
           success : function(data) {
 			  ////alert(data['msg']);
+			    window.location.href="admin.php";
+				  return;
 			  var x = document.getElementById("snackbar");
 				x.className = "show";
 				setTimeout(function(){ x.className = x.className.replace("show", ""); }, 4000);

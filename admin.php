@@ -10,6 +10,13 @@ if ($rid==0)
 	$url = './error-page.php';
     header("location: ".$url); // for two folders
 }
+$snackmsg="";
+if (isset($_SESSION['snackbar']))
+{
+	$snackmsg=$_SESSION['snackbar'];
+	$_SESSION['snackbar']="";
+	unset($_SESSION['snackbar']);
+}
 ?>
 <!doctype html>
 <html lang="en">
@@ -32,6 +39,47 @@ if ($rid==0)
 <style>
 .fa {
 	cursor:pointer;
+}
+#snackbar {
+  visibility: hidden;
+  min-width: 250px;
+  margin-left: -125px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 2px;
+  padding: 16px;
+  position: fixed;
+  z-index: 1;
+  left: 50%;
+  top: 50px;
+  font-size: 17px;
+}
+
+#snackbar.show {
+  visibility: visible;
+  -webkit-animation: fadein 0.5s, fadeout 0.5s 3.5s;
+  animation: fadein 0.5s, fadeout 0.5s 3.5s;
+}
+
+@-webkit-keyframes fadein {
+  from {top: 0; opacity: 0;} 
+  to {top: 50px; opacity: 1;}
+}
+
+@keyframes fadein {
+  from {top: 0; opacity: 0;}
+  to {top: 50px; opacity: 1;}
+}
+
+@-webkit-keyframes fadeout {
+  from {top: 50px; opacity: 1;} 
+  to {top: 0; opacity: 0;}
+}
+
+@keyframes fadeout {
+  from {top: 50px; opacity: 1;}
+  to {top: 0; opacity: 0;}
 }
 </style>
   <body>
@@ -89,7 +137,7 @@ if ($rid==0)
 			echo "<span id='errormessage1'></span>";
 			if (!(count($res1)>9))
 			{ ?>
-				<div id="printbar" style="float:right"><a href="FamilyMember.php"><button type="button" class="btn btn-primary ">Add</button></a></div>
+				
 			<?php } ?>
 		  		  
 		  <br/>
@@ -114,7 +162,7 @@ if ($rid==0)
           foreach ($res1 as $key => $row2)
           {
 			$cnt=$cnt+1;
-			$rn = mt_rand(11111111,99999999).$row2['rowid'].mt_rand(11111111,99999999);
+			$rn = mt_rand(11111111,99999999).$rid.mt_rand(11111111,99999999);
 			$rel = $row2['link_relation_relation'];
 			/// 
 			// Check if any education details are updated
@@ -203,7 +251,7 @@ if ($rid==0)
 		</table>
 
 		</div>
-
+	<div id="snackbar"></div>
     </div> <!-- /container -->
 
 
@@ -216,6 +264,16 @@ if ($rid==0)
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="https://getbootstrap.com/docs/3.4/assets/js/ie10-viewport-bug-workaround.js"></script>
 	<script>
+	var snackbar = "<?php echo $snackmsg; ?>";
+	if (snackbar!="")
+	{
+		 var x = document.getElementById("snackbar");
+		x.className = "show";
+		$("#snackbar").html(snackbar);
+		$("#snackbar").css('background-color','#87C261');
+		$("#snackbar").css('color','#FFFFFF');
+		setTimeout(function(){ x.className = x.className.replace("show", ""); }, 4000);
+	}
 	$(document).ready(function() {
     $('#example').DataTable();
 	} );

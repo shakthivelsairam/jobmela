@@ -1,10 +1,5 @@
 <?php
 require "session_user_utils.php";
-if (!(isset($_SESSION["isLogin"])))
-{
-  $url = './error-page.php';
-  header("location: ".$url); // for two folders
-}
 $edirow=0;
 if (isset($_REQUEST['sessionid']))
 {
@@ -204,28 +199,50 @@ button.btn.active:focus {
 				///print_r($p);
 				?>
 		  <span class="removeRow" id="removeRow" name="removeRow">
-			<div class="col-xs-1 small-txt-box" style="width:5%">
-			 <label for="inputCity">S.No</label>
-			<input type="text" name="pSno" id="pSno" class="form-control" placeholder="S.No"  value="<?php echo $k+1; ?>" />  
+			<div class="col-xs-1 small-txt-box" style="width:0%">
+			 <label for="inputCity"></label>
+			<input type="hidden" name="pSno" id="pSno" class="form-control" placeholder="S.No"  value="<?php echo $k+1; ?>" />  
 			</div>
 			<div class="col-xs-2 small-txt-box">
 			 <label for="inputCity">Education Level</label>
-			<select id="pEduLevel" class="form-control" name="pEduLevel">
+			<select id="pEduLevel" class="form-control" name="pEduLevel" onChange="fFetchField(this,<?php echo $k; ?>)">
 			<option value=0>--Select--</option>
 			<?php
-			 $devCoun1t = "select rowid,name from level";
+			$streams=array();
+			$streamqry="select rowid,name from stream";
+			$stream1 = $conn->prepare($streamqry);
+			$stream1->execute();
+			while ($rowe = $stream1->fetch(PDO::FETCH_NUM, PDO::FETCH_ORI_NEXT)) 
+			{
+				$streams[$rowe[0]]=$rowe[1];
+			}
+			 $devCoun1t = "select rowid,name,stream_stream_link from level";
 			$stmt23 = $conn->prepare($devCoun1t);
 			$stmt23->execute();
 			while ($rowx = $stmt23->fetch(PDO::FETCH_NUM, PDO::FETCH_ORI_NEXT)) 
 			{
-				?> <option value="<?php echo $rowx[0]; ?>" <?php if ($p[2]==$rowx[0]) echo " selected"; ?>><?php echo $rowx[1]; ?></option> <?php
+				?> <option value="<?php echo $rowx[0]; ?>" data-stream="<?php echo $rowx[2]; ?>" <?php if ($p[2]==$rowx[0]) echo " selected"; ?>><?php echo $rowx[1]." (".$streams[$rowx[2]]." )"; ?></option> <?php
 			}
 			?>
 			</select>
 			</div>
 			<div class="col-xs-2 small-txt-box" style="width:17%">
 			<label for="inputCity">Field Of Study</label>
-			<input type="text" name="pFieldStudy" id="pFieldStudy" value="<?php echo $p[3]; ?>" class="form-control" placeholder="ECE.,Nurshing.,Arts.,etc"  />                        
+			<select id="pFieldStudy" class="form-control" name="pFieldStudy">
+			<option value=0>--Select--</option>
+			<?php
+			if ($p[3]>0) 
+			{
+				$devCoun1t = "select rowid,name from field";
+				$stmt23 = $conn->prepare($devCoun1t);
+				$stmt23->execute();
+				while ($rowx = $stmt23->fetch(PDO::FETCH_NUM, PDO::FETCH_ORI_NEXT)) 
+				{
+					?> <option value="<?php echo $rowx[0]; ?>" <?php if ($p[3]==$rowx[0]) echo " selected"; ?>><?php echo $rowx[1]; ?></option> <?php
+				}
+			}
+				?>
+			</select>
 			</div>
 			<div class="col-xs-2 small-txt-box" style="width:13%">
 			<label for="inputCity">College/University</label>
@@ -248,7 +265,7 @@ button.btn.active:focus {
 			<input type="text" name="pMark" id="pMark" value="<?php echo $p[8]; ?>" class="form-control" placeholder="Percentage"  />  
 			</div>
 			<div class="col-xs-1 small-txt-box purshingDiv" style="width:5%">
-			<label for="inputCity">Purshing</label>
+			<label for="inputCity">Pursuing</label>
 			<input type="checkbox" name="pPurshing" id="pPurshing" <?php if ($p[9]==1) echo " checked"; ?> style="height:20px;margin-top:8px;width:40%" id="pPurshing"/>                        
 			<?php if ($k>0) echo '&nbsp;&nbsp;<img src="assets/img/delete_icon.png" onClick="fDelRow(this)" style="vertical-align: baseline;" heigth="20px" width="20px">'; ?>
 			</div>
@@ -294,37 +311,47 @@ button.btn.active:focus {
 	<script>
 	var totRows="<?php echo $k; ?>";
 	totRows=Number(totRows);
-	var singRow = '<span class="removeRow" id="removeRow" name="removeRow"><br><br><br><br> <div class="col-xs-1 small-txt-box" style="width:5%">';
-	singRow = singRow+'<label for="inputCity">S.No</label><input type="text" name="pSno" id="pSno" class="form-control" placeholder="S.No"  value="" />  ';
-	singRow = singRow+'</div><div class="col-xs-2 small-txt-box"><label for="inputCity">Education Level</label><select id="pEduLevel" class="form-control" name="pEduLevel">';
-	singRow = singRow+'<option value=0>--Select--</option>';
+	var singRow = '<span class="removeRow" id="removeRow" name="removeRow"><br><br><br><br> <div class="col-xs-1 small-txt-box" style="width:0%">';
+	singRow = singRow+'<label for="inputCity"></label><input type="hidden" name="pSno" id="pSno" class="form-control" placeholder="S.No"  value="" />  ';
+	singRow = singRow+'</div><div class="col-xs-2 small-txt-box"><label for="inputCity">Education Level</label><select id="pEduLevel" class="form-control" name="pEduLevel" onChange="fFetchField(this,';
+	singRow1 = ')">';
+	singRow1 = singRow1+'<option value=0>--Select--</option>';
 	<?php
-	 $devCoun1t = "select rowid,name from level";
+	$streams=array();
+	$streamqry="select rowid,name from stream";
+	$stream1 = $conn->prepare($streamqry);
+	$stream1->execute();
+	while ($rowe = $stream1->fetch(PDO::FETCH_NUM, PDO::FETCH_ORI_NEXT)) 
+	{
+		$streams[$rowe[0]]=$rowe[1];
+	}
+	 $devCoun1t = "select rowid,name,stream_stream_link from level";
 	$stmt23 = $conn->prepare($devCoun1t);
 	$stmt23->execute();
 	while ($rowx = $stmt23->fetch(PDO::FETCH_NUM, PDO::FETCH_ORI_NEXT)) 
 	{
 		?> 
-		singRow = singRow+'<option value="<?php echo $rowx[0]; ?>"><?php echo $rowx[1]; ?></option>';
+		singRow1 = singRow1+'<option value="<?php echo $rowx[0]; ?>"><?php echo $rowx[1]." (".$streams[$rowx[2]].") "; ?></option>';
 		<?php
 	}
 	?>
-	singRow = singRow+'</select></div><div class="col-xs-2 small-txt-box" style="width:17%"><label for="inputCity">Field Of Study</label>';
-	singRow = singRow+'<input type="text" name="pFieldStudy" id="pFieldStudy" value="" class="form-control" placeholder="ECE.,Nurshing.,Arts.,etc"  />';                        
-	singRow = singRow+'</div><div class="col-xs-2 small-txt-box" style="width:13%"><label for="inputCity">College/University</label>';
-	singRow = singRow+'<input type="text" name="pCollege" id="pCollege" value="" class="form-control" placeholder="College/University"  /></div>';
-	singRow = singRow+'<div class="col-xs-2 small-txt-box" style="width:12%">';
-	singRow = singRow+'<label for="inputCity">District</label>';
-	singRow = singRow+'<input type="text" name="pDistrict" id="pDistrict" value="" class="form-control" placeholder="District"  /></div>';
-	singRow = singRow+'<div class="col-xs-2 small-txt-box" style="width:12.5%"><label for="inputCity">From date</label>';
-	singRow = singRow+'<input type="date" name="pFromDate" id="pFromDate" value="" class="form-control" max="<?php echo date("Y-m-d"); ?>"  placeholder="Last Name"  /></div>';
-	singRow = singRow+'<div class="col-xs-2 small-txt-box" style="width:12.5%"><label for="inputCity">To date</label>';
-	singRow = singRow+'<input type="date" name="pToDate" id="pToDate" value="" class="form-control" max="<?php echo date("Y-m-d"); ?>"  placeholder="Last Name"  /></div>';
-	singRow = singRow+'<div class="col-xs-1 small-txt-box" style="width:5%"><label for="inputCity">Mark %</label>';
-	singRow = singRow+'<input type="text" name="pMark" id="pMark" value="" class="form-control" placeholder="Percentage"  /></div>';
-	singRow = singRow+'<div class="col-xs-1 small-txt-box purshingDiv" style="width:5%"><label for="inputCity">Purshing</label>';
-	singRow = singRow+'<input type="checkbox" name="pPurshing" id="pPurshing" style="height:20px;margin-top:8px;width:40%" id="pPurshing"/>';
-	singRow = singRow+'&nbsp;&nbsp;&nbsp;<img src="assets/img/delete_icon.png" onClick="fDelRow(this)" style="vertical-align: baseline;" heigth="20px" width="20px"></div></span>';
+	singRow1 = singRow1+'</select></div><div class="col-xs-2 small-txt-box" style="width:17%"><label for="inputCity">Field Of Study</label>';
+	singRow1 = singRow1+'<select id="pFieldStudy" class="form-control" name="pFieldStudy"><option value="0">--select--</option></select>';                        
+	singRow1 = singRow1+'</div><div class="col-xs-2 small-txt-box" style="width:13%"><label for="inputCity">College/University</label>';
+	singRow1 = singRow1+'<input type="text" name="pCollege" id="pCollege" value="" class="form-control" placeholder="College/University"  /></div>';
+	singRow1 = singRow1+'<div class="col-xs-2 small-txt-box" style="width:12%">';
+	singRow1 = singRow1+'<label for="inputCity">District</label>';
+	singRow1 = singRow1+'<input type="text" name="pDistrict" id="pDistrict" value="" class="form-control" placeholder="District"  /></div>';
+	singRow1 = singRow1+'<div class="col-xs-2 small-txt-box" style="width:12.5%"><label for="inputCity">From date</label>';
+	singRow1 = singRow1+'<input type="date" name="pFromDate" id="pFromDate" value="" class="form-control" max="<?php echo date("Y-m-d"); ?>"  placeholder="Last Name"  /></div>';
+	singRow1 = singRow1+'<div class="col-xs-2 small-txt-box" style="width:12.5%"><label for="inputCity">To date</label>';
+	singRow1 = singRow1+'<input type="date" name="pToDate" id="pToDate" value="" class="form-control" max="<?php echo date("Y-m-d"); ?>"  placeholder="Last Name"  /></div>';
+	singRow1 = singRow1+'<div class="col-xs-1 small-txt-box" style="width:5%"><label for="inputCity">Mark %</label>';
+	singRow1 = singRow1+'<input type="text" name="pMark" id="pMark" value="" class="form-control" placeholder="Percentage"  /></div>';
+	singRow1 = singRow1+'<div class="col-xs-1 small-txt-box purshingDiv" style="width:5%"><label for="inputCity">Pursuing</label>';
+	singRow1 = singRow1+'<input type="checkbox" name="pPurshing" id="pPurshing" style="height:20px;margin-top:8px;width:40%" id="pPurshing"/>';
+	singRow1 = singRow1+'&nbsp;&nbsp;&nbsp;<img src="assets/img/delete_icon.png" onClick="fDelRow(this)" style="vertical-align: baseline;" heigth="20px" width="20px"></div></span>';
+
 
 
 	
@@ -363,9 +390,9 @@ button.btn.active:focus {
 		
 		
 		
-		if (pSno[rownum].value=="") { pSno[rownum].style.border="1px solid red"; isEmpty=1; }
+		//if (pSno[rownum].value=="") { pSno[rownum].style.border="1px solid red"; isEmpty=1; }
 		if (pEduLevel[rownum].value==0) { pEduLevel[rownum].style.border="1px solid red"; isEmpty=1; }
-		if (pFieldStudy[rownum].value=="") { pFieldStudy[rownum].style.border="1px solid red"; isEmpty=1; }
+		if (pFieldStudy[rownum].value==0) { pFieldStudy[rownum].style.border="1px solid red"; isEmpty=1; }
 		if (pCollege[rownum].value=="") { pCollege[rownum].style.border="1px solid red"; isEmpty=1; }
 		if (pDistrict[rownum].value=="") { pDistrict[rownum].style.border="1px solid red"; isEmpty=1; }
 		if (pFromDate[rownum].value=="") { pFromDate[rownum].style.border="1px solid red"; isEmpty=1; }
@@ -398,7 +425,7 @@ button.btn.active:focus {
 	
 	
 	$('.add-row').on('click',function () {
-		$('.singleRow').append(singRow);
+		$('.singleRow').append(singRow+totRows+singRow1);
 		totRows=totRows+1;
 		if (totRows==5)
 		{
@@ -433,6 +460,15 @@ button.btn.active:focus {
 			setTimeout(function(){ x.className = x.className.replace("show", ""); }, 4000);
 			return false;
 		}
+		
+		var x = document.getElementById("snackbar");
+		x.className = "show";
+		$("#snackbar").html('Please wait.....');
+		$("#snackbar").css('background-color','#FAFD23');
+		$("#snackbar").css('color','#161615');
+		setTimeout(function(){ x.className = x.className.replace("show", ""); }, 5000);
+
+				
 		pEduLeveltxt="";
 		pFieldStudytxt="";
 		pCollegetxt="";
@@ -460,6 +496,7 @@ button.btn.active:focus {
 			}
 				
 		}
+		
 		updaterow=0;
 		familyRow = "<?php echo $edirow; ?>";
 		 $.ajax({
@@ -481,17 +518,19 @@ button.btn.active:focus {
           dataType:'json',
           success : function(data) {
 			  //alert(data['msg']);
-			  var x = document.getElementById("snackbar");
-				x.className = "show";
-				setTimeout(function(){ x.className = x.className.replace("show", ""); }, 4000);
+			  
               if (data['status']==0)
               {
+				  window.location.href="admin.php";
+				  return;
 				   $("#snackbar").html('Saved Successfully..!');
 						$("#snackbar").css('background-color','#87C261');
 						$("#snackbar").css('color','#FFFFFF');
               }
               else
               {
+				  window.location.href="admin.php";
+				  return;
 				 $("#snackbar").html('Failed to save..!');
 				$("#snackbar").css('background-color','#DF2909');
 				$("#snackbar").css('color','#FFFFFF');
@@ -506,7 +545,7 @@ button.btn.active:focus {
              $("#snackbar").html('Failed to save..!');
 			$("#snackbar").css('background-color','#DF2909');
 			$("#snackbar").css('color','#FFFFFF');
-			clearPrompts()
+			//clearPrompts()
           }
       });
 		
@@ -660,6 +699,58 @@ $('.saveUpdate').click(function() {
 	document.getElementsByName("pFromDate")[0].value="";
 	document.getElementsByName("pToDate")[0].value="";
 	document.getElementsByName("pMark")[0].value="";
+}
+function fFetchField(thisobj,rowid)
+{
+	var selectElement = document.getElementsByName("pFieldStudy")[rowid];
+	for (var i = selectElement.length - 1; i >= 0; i--){
+      selectElement.remove(i);
+	}
+	pFieldStudyId = selectElement.id;
+	$('[name="pFieldStudy"]').append($('<option>', {
+		value: 0,
+		text: 'Please wait....'
+	}));
+	$.ajax({
+          url : 'login_ajax.php',
+          type : 'POST',
+          data : {
+              'levelid' : thisobj.value,
+              'zproflag' : 893641
+          },
+          dataType:'json',
+          success : function(data) {
+			  for (var i = selectElement.length - 1; i >= 0; i--){
+				  selectElement.remove(i);
+				}
+				$('[name="pFieldStudy"]').append($('<option>', {
+					value: 0,
+					text: '--select--'
+				}));
+			  madata=data['data'];
+			   for(i=0;i<(madata.length);i++)
+			  {
+				//alert(madata[i]);
+				$('[name="pFieldStudy"]').append($('<option>', {
+					value:  madata[i][0],
+					text:  madata[i][1]
+				}));
+				
+				
+			  }
+              
+              // clearPrompts();
+          },
+          error : function(request,error)
+          {
+			   
+            $("#errormessage1").css('display', 'block');
+			$("#errormessage1").css('color', 'red');
+            $('#errormessage1').html("Failed to save, please contact admin");
+            $('#errormessage1').delay(6000).fadeOut();
+          }
+      });
+
 }
 </script>
   </body>

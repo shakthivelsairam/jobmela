@@ -1,10 +1,5 @@
 <?php
 require "session_user_utils.php";
-if (!(isset($_SESSION["isLogin"])))
-{
-  $url = './error-page.php';
-  header("location: ".$url); // for two folders
-}
 $edirow=0;
 if (isset($_REQUEST['sessionid']))
 {
@@ -25,7 +20,7 @@ if (isset($_REQUEST['sessionid']))
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
     
-    <title>Skill Portal</title>
+    <title>Awards Portal</title>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- Bootstrap core CSS -->
     <link href="https://getbootstrap.com/docs/3.4/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -204,9 +199,9 @@ button.btn.active:focus {
 				//print_r($p);
 				?>
 		  <span class="removeRow" id="removeRow" name="removeRow">
-			<div class="col-xs-1 small-txt-box">
-			 <label for="inputCity">S.No</label>
-			<input type="text" name="pSno" id="pSno" class="form-control" placeholder="S.No"  value="<?php echo $k+1; ?>" />  
+			<div class="col-xs-1 small-txt-box" style="width:0%">
+			 <label for="inputCity"></label>
+			<input type="hidden" name="pSno" id="pSno" class="form-control" placeholder="S.No"  value="<?php echo $k+1; ?>" />  
 			</div>
 			<div class="col-xs-2 small-txt-box">
 			 <label for="inputCity">Title</label>
@@ -223,7 +218,7 @@ button.btn.active:focus {
 			?>
 			</select>
 			</div>
-			<div class="col-xs-2 small-txt-box">
+			<div class="col-xs-3 small-txt-box">
 			<label for="inputCity">Date Awarded</label>
 			<input type="date" name="pAwardDte" id="pAwardDte" value="<?php echo $p[3]; ?>" class="form-control" max="<?php echo date('Y-m-d'); ?>"  placeholder="Last Name"  />                        
 			</div>
@@ -280,8 +275,8 @@ button.btn.active:focus {
 	<script>
 	var totRows="<?php echo $k; ?>";
 	totRows=Number(totRows);
-	var singRow = '<span class="removeRow" id="removeRow" name="removeRow"><br><br><br><br> <div class="col-xs-1 small-txt-box">';
-	singRow = singRow+'<label for="inputCity">S.No</label><input type="text" name="pSno" id="pSno" class="form-control" placeholder="S.No"  value="" />  ';
+	var singRow = '<span class="removeRow" id="removeRow" name="removeRow"><br><br><br><br> <div class="col-xs-13 small-txt-box" stye="width:0%">';
+	singRow = singRow+'<label for="inputCity"></label><input type="hidden" name="pSno" id="pSno" class="form-control" placeholder="S.No"  value="" />  ';
 	singRow = singRow+'</div><div class="col-xs-2 small-txt-box"><label for="inputCity">Title</label><select id="pTitle" class="form-control" name="pTitle">';
 	singRow = singRow+'<option value=0>--Select--</option>';
 	<?php
@@ -295,7 +290,7 @@ button.btn.active:focus {
 		<?php
 	}
 	?>
-	singRow = singRow+'</select></div><div class="col-xs-2 small-txt-box"><label for="inputCity">Date Awarded</label>';
+	singRow = singRow+'</select></div><div class="col-xs-3 small-txt-box"><label for="inputCity">Date Awarded</label>';
 	singRow = singRow+'<input type="date" name="pAwardDte" id="pAwardDte" class="form-control" placeholder=""  value="" max="<?php echo date("Y-m-d"); ?>" />  </div>';
 	singRow = singRow+'<div class="col-xs-4 small-txt-box"><label for="inputCity">Description</label>';
 	singRow = singRow+'<input type="text" name="pDesc" id="pDesc" class="form-control" placeholder="Description" value="" />  </div>';
@@ -331,7 +326,7 @@ button.btn.active:focus {
 		pAwardDte[rownum].style.border="1px solid #ccc";
 		pDesc[rownum].style.border="1px solid #ccc";
 		
-		if (pSno[rownum].value=="") { pSno[rownum].style.border="1px solid red"; isEmpty=1; }
+		//if (pSno[rownum].value=="") { pSno[rownum].style.border="1px solid red"; isEmpty=1; }
 		if (pTitle[rownum].value==0) { pTitle[rownum].style.border="1px solid red"; isEmpty=1; }
 		if (pAwardDte[rownum].value==0) { pAwardDte[rownum].style.border="1px solid red"; isEmpty=1; }
 		if (pDesc[rownum].value==0) { pDesc[rownum].style.border="1px solid red"; isEmpty=1; }
@@ -408,6 +403,8 @@ button.btn.active:focus {
           dataType:'json',
           success : function(data) {
 			  ////alert(data['msg']);
+			   window.location.href="admin.php";
+				  return;
 			  var x = document.getElementById("snackbar");
 				x.className = "show";
 				setTimeout(function(){ x.className = x.className.replace("show", ""); }, 4000);

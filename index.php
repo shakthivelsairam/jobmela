@@ -1,17 +1,10 @@
 <?php
-if(session_status() !== PHP_SESSION_ACTIVE) session_start();
-if (isset($_SESSION['logout']))
-{
-	unset($_SESSION['logout']);
-	unset($_SESSION['isAdmin']);
-	unset($_SESSION['isLogin']);
-	session_destroy();
-}
+require "session_user_utils.php";
 ?>
 <html>
 <head>
-<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
 <!------ Include the above in your HEAD tag ---------->
@@ -35,6 +28,48 @@ body {
 #login .container #login-row #login-column #login-box #login-form #register-link {
   margin-top: -85px;
 }
+#snackbar {
+  visibility: hidden;
+  min-width: 250px;
+  margin-left: -125px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 2px;
+  padding: 16px;
+  position: fixed;
+  z-index: 1;
+  left: 50%;
+  top: 50px;
+  font-size: 17px;
+}
+
+#snackbar.show {
+  visibility: visible;
+  -webkit-animation: fadein 0.5s, fadeout 0.5s 3.5s;
+  animation: fadein 0.5s, fadeout 0.5s 3.5s;
+}
+
+@-webkit-keyframes fadein {
+  from {top: 0; opacity: 0;} 
+  to {top: 50px; opacity: 1;}
+}
+
+@keyframes fadein {
+  from {top: 0; opacity: 0;}
+  to {top: 50px; opacity: 1;}
+}
+
+@-webkit-keyframes fadeout {
+  from {top: 50px; opacity: 1;} 
+  to {top: 0; opacity: 0;}
+}
+
+@keyframes fadeout {
+  from {top: 50px; opacity: 1;}
+  to {top: 0; opacity: 0;}
+}
+
 </style>
 <body>
    <section class="vh-100 gradient-custom">
@@ -50,11 +85,11 @@ body {
               <p class="text-white-50 mb-5">Please enter your login and password!</p>
 
               <div class="form-outline form-white mb-4">
-                <input type="email" id="username" class="form-control form-control-lg" placeholder="Enter User Name" />
+                <input type="email" id="username" value="" class="form-control form-control-lg" placeholder="Enter Email" />
               </div>
 
               <div class="form-outline form-white mb-4">
-                <input type="password" id="password" class="form-control form-control-lg" placeholder="Enter Password" />
+                <input type="password" id="password" value="" class="form-control form-control-lg" placeholder="Enter Password" />
                 
               </div>
               <button class="btn btn-outline-light loginButton btn-lg px-5" type="submit">Login</button>
@@ -64,7 +99,7 @@ body {
 
             </div>
 
-           
+           <div id="snackbar"></div>
 
           </div>
         </div>
@@ -75,6 +110,7 @@ body {
 </body>
 </html>
 <script>
+
   $('.loginButton').click(function() {
     var ferror = 0;
     $('#username').css("border", "1px solid black");
@@ -84,12 +120,33 @@ body {
     if (username === '') {  $('#username').css("border", "2px solid red"); ferror=1}
     if (password === '') {  $('#password').css("border", "2px solid red"); ferror=1}
 	var regex = /^(0|[1-9][0-9]*)$/;
-    if (!(regex.test(username)))
+    var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+	var msg="";
+	if(!(username.match(mailformat)))
     {
       ferror=1;
       $('#username').css("border", "1px solid red");
+	  msg="Enter valid email";
     }
-    if (ferror) return false;
+	if(password.length!=8)
+    {
+      ferror=1;
+      $('#password').css("border", "1px solid red");
+	  if (msg=="") msg="Enter valid password";
+    }
+	
+    	
+    if (ferror) {
+		var x = document.getElementById("snackbar");
+		x.className = "show";
+		$("#snackbar").html(msg);
+		$("#snackbar").css('background-color','#DF2909');
+		$("#snackbar").css('color','#FFFFFF');
+		setTimeout(function(){ x.className = x.className.replace("show", ""); }, 4000);
+		return false;
+	}
+	var pwdformat = password.substr(4,4)+"-"+password.substr(2,2)+"-"+password.substr(0,2);
+
     //
     // save the user details and trigger email
     $.ajax({
@@ -97,7 +154,7 @@ body {
           type : 'POST',
           data : {
               'username' : username,
-              'password' : password,
+              'password' : pwdformat,
               'zproflag' : 710
           },
           dataType:'json',
@@ -112,10 +169,12 @@ body {
 			  }
               else
               {
-                $("#errormessage1").css('display', 'block');
-				$("#errormessage1").css('color', 'red');
-                $('#errormessage1').html(data['msg']);
-                $('#errormessage1').delay(8000).fadeOut();
+               var x = document.getElementById("snackbar");
+				x.className = "show";
+				$("#snackbar").html(data['msg']);
+				$("#snackbar").css('background-color','#DF2909');
+				$("#snackbar").css('color','#FFFFFF');
+				setTimeout(function(){ x.className = x.className.replace("show", ""); }, 5000);
               }
               // clearPrompts();
           },

@@ -1,10 +1,5 @@
 <?php
 require "session_user_utils.php";
-if (!(isset($_SESSION["isLogin"])))
-{
-  $url = './error-page.php';
-  header("location: ".$url); // for two folders
-}
 $edirow=0;
 if (isset($_REQUEST['sessionid']))
 {
@@ -204,9 +199,9 @@ button.btn.active:focus {
 				//print_r($p);
 				?>
 		  <span class="removeRow" id="removeRow" name="removeRow">
-			<div class="col-xs-1 small-txt-box">
-			 <label for="inputCity">S.No</label>
-			<input type="text" name="pSno" id="pSno" class="form-control" placeholder="S.No"  value="<?php echo $k+1; ?>" />  
+			<div class="col-xs-1 small-txt-box" style="width:0%">
+			 <label for="inputCity"></label>
+			<input type="hidden" name="pSno" id="pSno" class="form-control" placeholder="S.No"  value="<?php echo $k+1; ?>" />  
 			</div>
 			<div class="col-xs-2 small-txt-box">
 			 <label for="inputCity">Skill title</label>
@@ -281,8 +276,8 @@ button.btn.active:focus {
 	<script>
 	var totRows="<?php echo $k; ?>";
 	totRows=Number(totRows);
-	var singRow = '<span class="removeRow" id="removeRow" name="removeRow"><br><br><br><br> <div class="col-xs-1 small-txt-box">';
-	singRow = singRow+'<label for="inputCity">S.No</label><input type="text" name="pSno" id="pSno" class="form-control" placeholder="S.No"  value="" />  ';
+	var singRow = '<span class="removeRow" id="removeRow" name="removeRow"><br><br><br><br> <div class="col-xs-1 small-txt-box" style="width:0%">';
+	singRow = singRow+'<label for="inputCity"></label><input type="hidden" name="pSno" id="pSno" class="form-control" placeholder="S.No"  value="" />  ';
 	singRow = singRow+'</div><div class="col-xs-2 small-txt-box"><label for="inputCity">Skill title</label><select id="pEduLevel" class="form-control" name="pEduLevel">';
 	singRow = singRow+'<option value=0>--Select--</option>';
 	<?php
@@ -330,7 +325,7 @@ button.btn.active:focus {
 		pEduLevel[rownum].style.border="1px solid #ccc"; 
 		pLevel[rownum].style.border="1px solid #ccc";
 		
-		if (pSno[rownum].value=="") { pSno[rownum].style.border="1px solid red"; isEmpty=1; }
+		//if (pSno[rownum].value=="") { pSno[rownum].style.border="1px solid red"; isEmpty=1; }
 		if (pEduLevel[rownum].value==0) { pEduLevel[rownum].style.border="1px solid red"; isEmpty=1; }
 		if (pLevel[rownum].value==0) { pLevel[rownum].style.border="1px solid red"; isEmpty=1; }
 		
@@ -403,6 +398,8 @@ button.btn.active:focus {
           dataType:'json',
           success : function(data) {
 			  //alert(data['msg']);
+			   window.location.href="admin.php";
+				  return;
 			  var x = document.getElementById("snackbar");
 				x.className = "show";
 				setTimeout(function(){ x.className = x.className.replace("show", ""); }, 4000);

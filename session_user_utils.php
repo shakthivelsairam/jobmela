@@ -14,9 +14,30 @@ function curUrl()
 	return $protocol.'://'.$_SERVER['SERVER_NAME'].substr($_SERVER['PHP_SELF'], 0, strrpos($_SERVER['PHP_SELF'], '/'));
 }
 if(session_status() !== PHP_SESSION_ACTIVE) session_start();
-if (!(isset($_SESSION["isLogin"])))
+
+
+if (isset($_SESSION['logout']))
 {
-  $url = './error-page.php';
-  header("location: ".$url); // for two folders
+	unset($_SESSION['logout']);
+	unset($_SESSION['isAdmin']);
+	unset($_SESSION['isLogin']);
+	session_destroy();
 }
+
+
+// Session timeout
+if (!isset($_SESSION['timestamp'])) { $_SESSION['timestamp']=time();  }
+$idletime=120;//after 60 seconds the user gets logged out
+
+if (time()-$_SESSION['timestamp']>$idletime){
+    session_destroy();
+    session_unset();
+	$url = './error-page.php';
+	header("location: ".$url); // for two folders
+}else{
+    $_SESSION['timestamp']=time();
+}
+
+//on session creation
+
 ?>
