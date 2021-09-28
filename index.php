@@ -1,192 +1,359 @@
-<?php
-require "session_user_utils.php";
-?>
+
+
+<!DOCTYPE html>
 <html>
 <head>
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
-<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!-- Bootstrap -->
+    <link href="http://www.telanganapolicewelfare.org/Content/css/apmain.css" rel="stylesheet" />
+    <link href="http://www.telanganapolicewelfare.org/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="http://www.telanganapolicewelfare.org/Content/css/animate.css" rel="stylesheet" />
+    <title>Tamil Nadu Police Welfare</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="http://www.telanganapolicewelfare.org/css/custom-styles.css">
+  
+
+   
+    <script type="text/javascript">
+        $(window).on('load', function () {
+            $('#status').fadeOut();
+            $('#preloader').delay(350).fadeOut('slow');
+            $('body').delay(350).css({ 'overflow': 'visible' });
+        })
+    </script>
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="../../assets/js/html5shiv.js"></script>
+      <script src="../../assets/js/respond.min.js"></script>
+    <![endif]-->
 </head>
-<!------ Include the above in your HEAD tag ---------->
-<style>
-body {
-  margin: 0;
-  padding: 0;
-  background-color: #17a2b8;
-  height: 100vh;
-}
-#login .container #login-row #login-column #login-box {
-  margin-top: 120px;
-  max-width: 600px;
-  height: 320px;
-  border: 1px solid #9C9C9C;
-  background-color: #EAEAEA;
-}
-#login .container #login-row #login-column #login-box #login-form {
-  padding: 20px;
-}
-#login .container #login-row #login-column #login-box #login-form #register-link {
-  margin-top: -85px;
-}
-#snackbar {
-  visibility: hidden;
-  min-width: 250px;
-  margin-left: -125px;
-  background-color: #333;
-  color: #fff;
-  text-align: center;
-  border-radius: 2px;
-  padding: 16px;
-  position: fixed;
-  z-index: 1;
-  left: 50%;
-  top: 50px;
-  font-size: 17px;
-}
-
-#snackbar.show {
-  visibility: visible;
-  -webkit-animation: fadein 0.5s, fadeout 0.5s 3.5s;
-  animation: fadein 0.5s, fadeout 0.5s 3.5s;
-}
-
-@-webkit-keyframes fadein {
-  from {top: 0; opacity: 0;} 
-  to {top: 50px; opacity: 1;}
-}
-
-@keyframes fadein {
-  from {top: 0; opacity: 0;}
-  to {top: 50px; opacity: 1;}
-}
-
-@-webkit-keyframes fadeout {
-  from {top: 50px; opacity: 1;} 
-  to {top: 0; opacity: 0;}
-}
-
-@keyframes fadeout {
-  from {top: 50px; opacity: 1;}
-  to {top: 0; opacity: 0;}
-}
-
-</style>
 <body>
-   <section class="vh-100 gradient-custom">
-  <div class="container py-5 h-100">
-    <div class="row d-flex justify-content-center align-items-center h-100">
-      <div class="col-12 col-md-8 col-lg-6 col-xl-5">
-        <div class="card bg-dark text-white" style="border-radius: 1rem;">
-          <div class="card-body p-5 text-center" style="height:500px">
-
-            <div class="mb-md-5 mt-md-4 pb-5">
-
-              <h2 class="fw-bold mb-2 text-uppercase">Portal Login</h2>
-              <p class="text-white-50 mb-5">Please enter your login and password!</p>
-
-              <div class="form-outline form-white mb-4">
-                <input type="email" id="username" value="" class="form-control form-control-lg" placeholder="Enter Email" />
-              </div>
-
-              <div class="form-outline form-white mb-4">
-                <input type="password" id="password" value="" class="form-control form-control-lg" placeholder="Enter Password" />
-                
-              </div>
-              <button class="btn btn-outline-light loginButton btn-lg px-5" type="submit">Login</button>
-				<br/></br>
-              <p class="small pb-lg-2"><a href="#!">Forgot password?</a></p>
-			<div id="errormessage1"></div>
-
+ 
+	<div class="header-container">
+        
+        <div class="header-title">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-6 col-sm-2"><img src="webpageimages/Tamil_Nadu_Police_Logo.png" class="img-responsive" style="max-height: 100px;"></div>
+                    <div class="col-sm-push-8 col-sm-2 col-xs-6"><img src="webpageimages/tnpolice.jpg" class="img-responsive pull-right" style="max-height: 100px;"></div>
+                    <div class="col-sm-pull-2 col-sm-8 text-center">
+                        <h3 class="header-tag">Tamil Nadu State Police Welfare</h3>
+                        <p class="header-subtag">A Welfare Wing Of Tamil Nadu State Police</p>
+                    </div>
+                </div>
             </div>
-
-           <div id="snackbar"></div>
-
-          </div>
         </div>
-      </div>
+        <div class="header-menu ">
+            <div class="container">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse no-padding" id="navbar-collapse">
+                    <div class="login-btn pull-right"><a href="login.php"><span><i class="fa fa-sign-in" aria-hidden="true"></i></span> Login</a></div>
+                    <ul class="nav navbar-nav nav-strip-menu flip">
+                        <li><a href="#" class="active"><span><i class="fa fa-home " aria-hidden="true"></i></span> Home</a> </li>
+                        <li><a href="#"><span><i class="fa fa-user-circle-o" aria-hidden="true"></i></span> About</a></li>
+                        <li><a href="#"><span><i class="fa fa-university" aria-hidden="true"></i></span> Services</a></li>
+                        <li><a href="#"><span><i class="fa fa-file-image-o" aria-hidden="true"></i></span> Gallery</a></li>
+                        <li><a href="#"><span><i class="fa fa-envelope" aria-hidden="true"></i></span> Contact</a></li>
+                        <li><a href="#"><span><i class="fa fa-download" aria-hidden="true"></i></span> Downloads</a></li>                        
+                    </ul>
+                    
+                </div><!-- /.navbar-collapse -->
+            </div>
+        </div>
     </div>
-  </div>
-</section>
+	 <div class="row-fluid">
+            <div class="container-fluid" style="padding: 10px;     padding-bottom: 0;">
+                <!--<marquee class="mrarq" behavior="scroll" direction="left" onmouseover="this.stop();" onmouseout="this.start();">
+                    WELCOME TO TELANGANA STATE POLICE WELFARE
+
+                </marquee>-->
+              
+                <!--     <div style="    color: #ea780f;     font-size: 17px;     font-family: Myriad Pro !important;" class="text zoominheader zoomoutheader" style="   " > <span class="spanblink"> <span class="fa fa-hand-o-right blinkz" style="    font-size: 20px; " ></span> Live Launch of billing is postponed and date will be intimated shortly<span></div>
+                -->
+                
+            </div>
+        </div>
+    <div class="container-fluid banner-container">
+        <div id="myCarousel" class="carousel slide" data-ride="carousel">
+
+
+        </div>
+    </div>
+
+	<div class="latest-news">
+        <div class="container">
+            <p class="news-tag">Latest News <span class="span-blink"><i class="fa fa-angle-right"></i><i class="fa fa-angle-right"></i></span></p>
+            <marquee class="m-t-5">Welcome To Tamil Nadu State Police Welfare..</marquee>
+        </div>
+    </div>
+
+	
+<!-- for welcome note-->
+<div class="container ">
+        
+        <div class="welcome-box">
+            <h2 class="welcome-title">About Tamil Nadu Police Welfare Wing</h2>
+            
+            <div class="welcome-content">In a disciplined force like Police which is on guard 24 hours a day and 365 days a year the welfare of the men and their families has direct bearing on the morale and efficiency of the force.  Ever increasing work load, negligible pay and extreme stressful conditions plague the present day Police.  To mitigate these sufferings and improve the conditions of the Police personnel, the Tamil Nadu State Police has designed a number of welfare measures.</div>
+            <div class="floral-border"><img src="webpageimages/floral-border.png"></div>
+        </div>
+    </div>
+
+<!-- for welcome note-->	
+<!-- for grid-->
+	
+	<div class="container">
+        <div class="">
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="welfare-section">
+                        
+                        <h4 class="section-head"></h4>
+                        
+                        <p class="section-content">
+                            Coming soon
+                        </p>
+                        
+                    </div>
+                </div>
+                <div class="col-sm-4">                    
+                    <div class="welfare-section">
+                        
+                        <h4 class="section-head"></h4>
+                        
+                        <p class="section-content">
+                            Coming soon
+                        </p>
+                        
+                    </div>
+                 </div>
+                <div class="col-sm-4">
+                    <div class="welfare-section">
+                        
+                        <h4 class="section-head"></h4>
+                        
+                        <p class="section-content">
+                            Coming Soon
+                        </p> 
+                        
+                    </div>
+                 </div>
+            </div>
+        </div>
+    </div>
+	
+	<!--for grid-->
+	<!--for officers section-->
+	<div class="officer-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="media officer-box">
+                        <div class="media-left">
+                            <img src="webpageimages/default1.png" height="100px" width="150px">    
+                        </div>
+                        <div class="media-body">
+                            <h4 class="officer-name"></h4>
+                            <p class="officer-desig"></p>
+                            <div class="officer-text">Coming soon</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="media officer-box">
+                        <div class="media-left">
+                            <img src="webpageimages/default1.png" height="100px" width="150px">                            
+                        </div>
+                        <div class="media-body">
+                            <h4 class="officer-name"></h4>
+                            <p class="officer-desig"></p>
+                            <div class="officer-text">Coming Soon</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+	
+<!--for footer banner-->
+<div class="container">
+        <div class="announcement">
+            <h4 class="announcement-header">Announcements</h4>
+            <div class="announcement-container">
+                <h4 class="no-margin m-b-20"></h4>
+                <marquee class="announcement-list" id="scroll_news" direction="up" scrolldelay="100">
+                    <div onmouseover="document.getElementById('scroll_news').stop();" onmouseout="document.getElementById('scroll_news').start();">
+                        <ul class="list-group">
+                            <li class="list-group-item"><a> Announcement 1</a></li>
+                            <li class="list-group-item"><a> Announcement 2</a></li>
+							<li class="list-group-item"><a> Announcement 3</a></li>
+							<li class="list-group-item"><a> Announcement 4</a></li>
+							<li class="list-group-item"><a> Announcement 5</a></li>
+                        </ul>
+                    </div>
+                </marquee>
+            </div>
+        </div>
+    </div>
+
+	<div class="footer">
+        <div class="container">
+            <div class="foot-logo">
+                <img src="webpageimages/shield.jpeg" class="foot-logo-img">
+            </div>
+            <h4 class="text-center text-uppercase">Tamil Nadu State Police Welfare</h4>
+            <ul class="foot-menu list-inline text-center font-md">
+                <li><a href="#">Home</a></li>
+                <li>|</li>
+                <li><a href="#">About</a></li>
+                <li>|</li>
+                <li><a href="#">Services</a></li>
+                <li>|</li>
+                <li><a href="#">Gallery</a></li>
+                <li>|</li>
+                <li><a href="#>Contact</a></li>
+                <li>|</li>
+                <li><a href="#">Downloads</a></li>
+                <li>|</li>
+                <li><a href="login.php">Login</a></li>
+            </ul>
+        </div>
+        <div class="footer-copy">
+            <div class="container">
+                Copyright © 2021 Tamil Nadu Police Welfare. All rights reserved
+            </div>
+         </div>
+    </div>
+	<!--for footer-->
+	
+   <!-- <div class="container p-r-l-0">
+        <table class="table" style="    margin-bottom: 0;">
+            <tr>
+                <td style="    vertical-align: middle;"><p style="    border: .5px solid #040303;"></p></td>
+                <td style="    width: 100px;"><div style="height: 100px;     margin: auto;     width: 94px;"><img style="    width: 100%;" src="~/Content/Logos/002.png"></div></td>
+                <td style="    vertical-align: middle;"><p style="    border: .5px solid #040303;"></p></td>
+            </tr>
+        </table>
+        <p style="text-align:center;     font-size: 17px;     color: #6266b1;    font-family: 'Open Sans', sans-serif;">TELANGANA STATE POLICE WELFARE</p>
+        <ul class="foot-menu">
+            <li><a href="/">Home</a> </li>
+            <li><a href="/Account/About">About</a></li>
+            <li><a href="/Account/services">Services</a></li>
+            <li><a href="/Account/gallary">Gallery</a></li>
+            <li><a href="/Account/Contact">Contact</a></li>
+            <li><a href="/Account/Downloads">Downloads</a></li>
+            <li><a href="/Account/logins">Login</a></li>
+        </ul>
+    </div>
+    <div class="container-fluid ftr">
+        <div class="">
+            <p>Copyright © 2021 Telangana Police Welfare. All rights reserved</p>
+        </div>
+    </div>-->
+
+
+
+
+    <script src="http://www.telanganapolicewelfare.org/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="http://www.telanganapolicewelfare.org/js/bootstrap.js"></script>
+<script>
+    // Trigger CSS animations on scroll.
+    // Detailed explanation can be found at http://www.bram.us/2013/11/20/scroll-animations/
+
+    // Looking for a version that also reverses the animation when
+    // elements scroll below the fold again?
+    // --> Check https://codepen.io/bramus/pen/vKpjNP
+    jQuery(function ($) {
+
+        // Function which adds the '' class to any '.animatable' in view
+        var doAnimations = function () {
+
+            // Calc current offset and get all animatables
+            var offset = $(window).scrollTop() + $(window).height(),
+                $animatables = $('.animatable');
+
+            // Unbind scroll handler if we have no animatables
+            if ($animatables.size() == 0) {
+                $(window).off('scroll', doAnimations);
+            }
+
+            // Check all animatables and animate them if necessary
+            $animatables.each(function (i) {
+                var $animatable = $(this);
+                if (($animatable.offset().top + $animatable.height() - 20) < offset) {
+                    $animatable.removeClass('animatable').addClass('');
+                }
+            });
+
+        };
+
+        // Hook doAnimations on scroll, and trigger a scroll
+        $(window).on('scroll', doAnimations);
+        $(window).trigger('scroll');
+
+    });
+
+    $(window).scroll(function () {
+        var scroll = $(window).scrollTop();
+        var height = $('.header-title').height();
+        if (scroll >= height) {
+            $(".header-menu").addClass("fixed-top");
+        } else {
+            $(".header-menu").removeClass("fixed-top");
+        }
+    });
+</script>
+
 </body>
 </html>
+<style>
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
+@import url('https://fonts.googleapis.com/css?family=Oswald');
+</style>
 <script>
+    // Trigger CSS animations on scroll.
+    // Detailed explanation can be found at http://www.bram.us/2013/11/20/scroll-animations/
 
-  $('.loginButton').click(function() {
-    var ferror = 0;
-    $('#username').css("border", "1px solid black");
-    $('#password').css("border", "1px solid black");
-    var username = $('#username').val();
-    var password = $('#password').val();
-    if (username === '') {  $('#username').css("border", "2px solid red"); ferror=1}
-    if (password === '') {  $('#password').css("border", "2px solid red"); ferror=1}
-	var regex = /^(0|[1-9][0-9]*)$/;
-    var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-	var msg="";
-	if(!(username.match(mailformat)))
-    {
-      ferror=1;
-      $('#username').css("border", "1px solid red");
-	  msg="Enter valid email";
-    }
-	if(password.length!=8)
-    {
-      ferror=1;
-      $('#password').css("border", "1px solid red");
-	  if (msg=="") msg="Enter valid password";
-    }
-	
-    	
-    if (ferror) {
-		var x = document.getElementById("snackbar");
-		x.className = "show";
-		$("#snackbar").html(msg);
-		$("#snackbar").css('background-color','#DF2909');
-		$("#snackbar").css('color','#FFFFFF');
-		setTimeout(function(){ x.className = x.className.replace("show", ""); }, 4000);
-		return false;
-	}
-	var pwdformat = password.substr(4,4)+"-"+password.substr(2,2)+"-"+password.substr(0,2);
+    // Looking for a version that also reverses the animation when
+    // elements scroll below the fold again?
+    // --> Check https://codepen.io/bramus/pen/vKpjNP
+    jQuery(function ($) {
 
-    //
-    // save the user details and trigger email
-    $.ajax({
-          url : 'login_ajax.php',
-          type : 'POST',
-          data : {
-              'username' : username,
-              'password' : pwdformat,
-              'zproflag' : 710
-          },
-          dataType:'json',
-          success : function(data) {
-              if (data['status']==0)
-              {
-                 window.location.replace("admin.php");
-              }
-			  else if (data['status']==99)
-			  {
-				  window.location.replace("dashboard.php");
-			  }
-              else
-              {
-               var x = document.getElementById("snackbar");
-				x.className = "show";
-				$("#snackbar").html(data['msg']);
-				$("#snackbar").css('background-color','#DF2909');
-				$("#snackbar").css('color','#FFFFFF');
-				setTimeout(function(){ x.className = x.className.replace("show", ""); }, 5000);
-              }
-              // clearPrompts();
-          },
-          error : function(request,error)
-          {
-            $("#errormessage1").css('display', 'block');
-            $('#errormessage1').html("Failed to login, please contact admin");
-			$("#errormessage1").css('color', 'red');
-            $('#errormessage1').delay(9000).fadeOut();
-          }
-      });
-    //
-    return false;
-  });
+        // Function which adds the '' class to any '.animatable' in view
+        var doAnimations = function () {
+
+            // Calc current offset and get all animatables
+            var offset = $(window).scrollTop() + $(window).height(),
+                $animatables = $('.animatable');
+
+            // Unbind scroll handler if we have no animatables
+            if ($animatables.size() == 0) {
+                $(window).off('scroll', doAnimations);
+            }
+
+            // Check all animatables and animate them if necessary
+            $animatables.each(function (i) {
+                var $animatable = $(this);
+                if (($animatable.offset().top + $animatable.height() - 20) < offset) {
+                    $animatable.removeClass('animatable').addClass('');
+                }
+            });
+
+        };
+
+        // Hook doAnimations on scroll, and trigger a scroll
+        $(window).on('scroll', doAnimations);
+        $(window).trigger('scroll');
+
+    });
 </script>

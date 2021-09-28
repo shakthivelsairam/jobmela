@@ -108,7 +108,7 @@ if ((isset($_REQUEST['zproflag']))&&($_REQUEST['zproflag']==109091))
 	   {
 		   // preferredLoc
 		   // prefferedInd
-		   $familyreg = "update family set name=?,link_relation_relation=?,fathersname=?,dob=?,mobile=?,doorno=?,addline1=?,addline2=?,addline3=?,city=?,state=?,pincode=?,aaadhar=?,language=?,height=?,preferredLoc=?,prefferedInd=?,gpfno=?,rank=?,gradeno=?,station=?,fathermobile=?,link_district_district=? where rowid=?";
+		   $familyreg = "update family set name=?,link_relation_relation=?,fathersname=?,dob=?,mobile=?,doorno=?,addline1=?,addline2=?,addline3=?,city=?,state=?,pincode=?,aaadhar=?,language=?,height=?,preferredLoc=?,prefferedInd=?,gpfno=?,frank=?,gradeno=?,station=?,fathermobile=?,link_district_district=? where rowid=?";
 		$stmt = $conn->prepare($familyreg);
 		$er = $stmt->execute([$pName,$pRelation,$pFName,$pDOB,$pMobile,$pDoorNo,$pAddLine1,$pAddLine2,$pAddLine3,$pCity,$pState,$pPinCode,$pAadhar,$pLanguage,$pHeight,$pWorkLoc,$pIndustry,$pFatherGPFNo,$pFatherRank,$pFatherGradeNo,$pFatherStation,$pFatherMobile,$pDistrict,$updaterow]);
 		$qryResult['status'] = 0;
@@ -119,7 +119,7 @@ if ((isset($_REQUEST['zproflag']))&&($_REQUEST['zproflag']==109091))
 	   else
 	   {
 		$familyreg = "insert into family (
-		link_master_master,name,link_relation_relation,fathersname,dob,mobile,doorno,addline1,addline2,addline3,city,state,pincode,aaadhar,language,height,preferredLoc,prefferedInd,gpfno,rank,gradeno,station,fathermobile,link_district_district) 
+		link_master_master,name,link_relation_relation,fathersname,dob,mobile,doorno,addline1,addline2,addline3,city,state,pincode,aaadhar,language,height,preferredLoc,prefferedInd,gpfno,frank,gradeno,station,fathermobile,link_district_district) 
 		values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		$stmt = $conn->prepare($familyreg);
 		$stmt->execute([$masterrowid,$pName,$pRelation,$pFName,$pDOB,$pMobile,$pDoorNo,$pAddLine1,$pAddLine2,$pAddLine3,$pCity,$pState,$pPinCode,$pAadhar,$pLanguage,$pHeight,$pWorkLoc,$pIndustry,$pFatherGPFNo,$pFatherRank,$pFatherGradeNo,$pFatherStation,$pFatherMobile,$pDistrict]);
@@ -359,6 +359,7 @@ if ((isset($_REQUEST['zproflag']))&&($_REQUEST['zproflag']==444000012))
 		}
 		$qryResult['status'] = 0;
 		$qryResult['msg'] = "Saved Successfully";
+		$_SESSION["snackbar"]="Details Altered Successfully";
 		echo json_encode($qryResult);
 		return;
 		

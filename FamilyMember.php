@@ -175,7 +175,7 @@ button.btn.active:focus {
             echo "Unable to process your request, contact admin";
             return;
           }
-		    $devCount = "select rowid,link_master_master,name,link_relation_relation,fathersname,dob,mobile,doorno,addline1,addline2,addline3,city,state,pincode,aaadhar,language,height,preferredLoc,prefferedInd,gpfno,rank,gradeno,station,fathermobile,link_district_district from family where rowid=?";
+		    $devCount = "select rowid,link_master_master,name,link_relation_relation,fathersname,dob,mobile,doorno,addline1,addline2,addline3,city,state,pincode,aaadhar,language,height,preferredLoc,prefferedInd,gpfno,frank,gradeno,station,fathermobile,link_district_district from family where rowid=?";
 			$stmt = $conn->prepare($devCount);
 			$stmt->execute([$edirow]);
 			$rec="^^^^^^^^^^^^^^^^^^^^^^^^^^^";
@@ -371,8 +371,9 @@ button.btn.active:focus {
 			<div class="form-group col-md-3">
 			</div>
 			<div class="form-group col-md-3">
-			 <label for="inputState">Photo [Max size: 1MB]</label>
+			 <label for="inputState">Photo [Max size: 300KB]</label>
 			<input type="file" name="imgInp" accept="image/*" class="form-control" id="imgInp" value="<?php echo $pieces[1]; ?>">
+			<span id="filesizelimit"></span>
 			</div>
 			<div class="form-group col-md-3">
 				<span id="profImage"><img id="blah" width="150px" height="130px" src="profile_images/<?php echo $profile_img; ?>" ></span>
@@ -383,7 +384,9 @@ button.btn.active:focus {
 				<button type="button" class="btn btn-cancel">Cancel</button>
 			</div>
 			<div class="form-group col-md-3">
+			<span id="resumesizelimit"></span><br/><br/>
 			   <label><span id="uploadResume"><?php echo $profile_pdf; ?></span></label>
+			   
 			</div>
 		  </div>
 		  
@@ -537,6 +540,25 @@ button.btn.active:focus {
 	if (pFatherMobile.length!=10) {  $('#pFatherMobile').css("border", "1px solid red"); ferror=1; }
 	if (pDistrict==0) {  $('#pDistrict').css("border", "1px solid red"); ferror=1; }
 	
+	var fileUpload = document.getElementById("imgInp");
+	if ($('#imgInp')[0].files.length>0)
+	{
+		if (typeof (fileUpload.files) != "undefined") {
+			var size = parseFloat(fileUpload.files[0].size / 1024).toFixed(0);
+			if (size>300) { $('#filesizelimit').html("<font color='red'>File size ["+size+" KB] exceed limit</font>"); $('#imgInp').css("border", "1px solid red"); ferror=1}
+		}
+	}
+	// Check resme size
+	
+	var fileUpload = document.getElementById("pResume");
+	if ($('#pResume')[0].files.length>0)
+	{
+		if (typeof (fileUpload.files) != "undefined") {
+			var size = parseFloat(fileUpload.files[0].size / 1024).toFixed(2);
+			size=(size/1000).toFixed(2);
+			if (size>2) { $('#resumesizelimit').html("<font color='red'>File size ["+size+" MB] exceed limit</font>"); $('#pResume').css("border", "1px solid red"); ferror=1}
+		}
+	}
 	
     if (ferror) {
 		var x = document.getElementById("snackbar");

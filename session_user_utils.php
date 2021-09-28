@@ -27,12 +27,19 @@ if (isset($_SESSION['logout']))
 
 // Session timeout
 if (!isset($_SESSION['timestamp'])) { $_SESSION['timestamp']=time();  }
-$idletime=120;//after 60 seconds the user gets logged out
+$idletime=500;//after 60 seconds the user gets logged out
 
 if (time()-$_SESSION['timestamp']>$idletime){
-    session_destroy();
-    session_unset();
-	$url = './error-page.php';
+	if (strpos($_SERVER['HTTP_REFERER'],"index.php"))
+	{
+		$url = 'login.php';
+	}
+	else
+	{
+		session_destroy();
+		session_unset();
+		$url = './error-page.php';
+	}
 	header("location: ".$url); // for two folders
 }else{
     $_SESSION['timestamp']=time();
