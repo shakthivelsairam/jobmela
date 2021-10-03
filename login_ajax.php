@@ -18,6 +18,190 @@ if ((isset($_REQUEST['zproflag']))&&($_REQUEST['zproflag']==710))
   try
   {
 	unset($_SESSION["isLogin"]);
+	$qryResult = array();
+	$qryResult['status'] = 1;
+	$qryResult['msg'] = "Invalid login credentials";
+	$userid = $_REQUEST['username'];
+	$pwd = $_REQUEST['password'];
+	$loginchk = "select rowid,userid,pwd,companyname from companyuser where userid=? and status=?";
+	$stmt = $conn->prepare($loginchk);
+	$stmt->execute([$userid,1]);
+    if ($row = $stmt->fetch(PDO::FETCH_NUM, PDO::FETCH_ORI_NEXT)) 
+	{	
+		if ($row[2]==md5($pwd))
+		{
+			$qryResult['msg'] = "Login Success";
+			$qryResult['status'] = 0;
+			$qryResult['firsttime'] = $row[3];
+			$_SESSION["isLogin"]=1;
+			$_SESSION["useridref"]=$row[0];
+		}
+		else
+		{
+			$qryResult['msg'] = "Invalid password, please try with valid password";
+			$qryResult['status'] = 9;
+		}
+		
+	}
+  }
+  catch(PDOException $e) {
+    $qryResult = array();
+    $qryResult['status'] = 1;
+    $qryResult['msg'] = "Login failed, please contact admin".$e;
+    echo json_encode($qryResult);
+    return;
+  }
+   echo json_encode($qryResult);
+      return;
+}
+if ((isset($_REQUEST['zproflag']))&&($_REQUEST['zproflag']==77665))
+{
+  try
+  {
+		/*
+			  'pName' : pName,
+			  'pJobTitle' : pJobTitle,
+              'pOrgName' : pOrgName,
+			  'pEmail' : pEmail,
+			  'pMobile' : pMobile,
+			  'pDesc' : pDesc,
+			  'pRemarks' : pRemarks,
+			  'userrow' : userrow,
+	  */
+	
+	$qryResult = array();
+	$qryResult['status'] = 1;
+	$qryResult['msg'] = "Failed to update your details";
+	$pName = $_REQUEST['pName'];
+	$pJobTitle = $_REQUEST['pJobTitle'];
+	$pOrgName = $_REQUEST['pOrgName'];
+	$pEmail = $_REQUEST['pEmail'];
+	$pMobile = $_REQUEST['pMobile'];
+	$pDesc = $_REQUEST['pDesc'];
+	$pRemarks = $_REQUEST['pRemarks'];
+	$userrow = $_REQUEST['userrow'];
+	
+	$loginchk = "update companyuser set username=?,email=?,mobile=?,remarks=?,description=?,designation=?,companyname=? where rowid=?";
+	$stmt = $conn->prepare($loginchk);
+	$res = $stmt->execute([$pName,$pEmail,$pMobile,$pRemarks,$pDesc,$pJobTitle,$pOrgName,$userrow]);
+    if ($res==1) 
+	{	
+		$qryResult['msg'] = "Details updated successfully";
+		$qryResult['status'] = 0;
+	}
+	else
+	{
+		$qryResult['msg'] = "Failed to update details";
+		$qryResult['status'] = 99;
+	}
+  }
+  catch(PDOException $e) {
+    $qryResult = array();
+    $qryResult['status'] = 1;
+    $qryResult['msg'] = "Login failed, please contact admin".$e;
+    echo json_encode($qryResult);
+    return;
+  }
+	echo json_encode($qryResult);
+	return;
+}
+if ((isset($_REQUEST['zproflag']))&&($_REQUEST['zproflag']==5903))
+{
+  try
+  {
+	/*
+	 'compayid' : compayid,
+              'checkedflag' : flag,
+			  'cmprowid' : rowid,
+	*/
+	$qryResult = array();
+	$qryResult['status'] = 1;
+	$qryResult['msg'] = "Failed to update";
+	$compayid = $_REQUEST['compayid'];
+	$checkedflag = $_REQUEST['checkedflag'];
+	$candiateid = $_REQUEST['candiateid'];
+	$loginchk = "select rowid,selectedflg from sortlistdata where companyid=? and candidateid=?";
+	$stmt = $conn->prepare($loginchk);
+	$stmt->execute([$compayid,$candiateid]);
+    if ($row = $stmt->fetch(PDO::FETCH_NUM, PDO::FETCH_ORI_NEXT)) 
+	{	
+		$loginchk = "update sortlistdata set selectedflg=? where rowid=?";
+		$stmt = $conn->prepare($loginchk);
+		$res = $stmt->execute([$checkedflag,$row[0]]);
+		$qryResult['msg'] = "Updated successfully";
+		$qryResult['status'] = 0;
+	}
+	else
+	{
+		$loginchk = "insert into sortlistdata (companyid,candidateid,selectedflg) values (?,?,?)";
+		$stmt = $conn->prepare($loginchk);
+		$res = $stmt->execute([$compayid,$candiateid,$checkedflag]);
+		$qryResult['msg'] = "Updated successfully";
+		$qryResult['status'] = 0;
+	}
+ }
+  catch(PDOException $e) {
+    $qryResult = array();
+    $qryResult['status'] = 1;
+    $qryResult['msg'] = "Failed";
+    echo json_encode($qryResult);
+    return;
+  }
+   echo json_encode($qryResult);
+      return;
+}
+if ((isset($_REQUEST['zproflag']))&&($_REQUEST['zproflag']==4400112))
+{
+  try
+  {
+	/*
+	 'compayid' : compayid,
+              'checkedflag' : flag,
+			  'cmprowid' : rowid,
+	*/
+	$qryResult = array();
+	$qryResult['status'] = 1;
+	$qryResult['msg'] = "Failed to update";
+	$compayid = $_REQUEST['compayid'];
+	$remarks = $_REQUEST['remarks'];
+	$candiateid = $_REQUEST['candiateid'];
+	$loginchk = "select rowid,selectedflg from sortlistdata where companyid=? and candidateid=?";
+	$stmt = $conn->prepare($loginchk);
+	$stmt->execute([$compayid,$candiateid]);
+    if ($row = $stmt->fetch(PDO::FETCH_NUM, PDO::FETCH_ORI_NEXT)) 
+	{	
+		$loginchk = "update sortlistdata set remarks=? where rowid=?";
+		$stmt = $conn->prepare($loginchk);
+		$res = $stmt->execute([$remarks,$row[0]]);
+		$qryResult['msg'] = "Updated successfully";
+		$qryResult['status'] = 0;
+	}
+	else
+	{
+		$loginchk = "insert into sortlistdata (companyid,candidateid,selectedflg,remarks) values (?,?,?,?)";
+		$stmt = $conn->prepare($loginchk);
+		$res = $stmt->execute([$compayid,$candiateid,0,$remarks]);
+		$qryResult['msg'] = "Updated successfully";
+		$qryResult['status'] = 0;
+	}
+ }
+  catch(PDOException $e) {
+    $qryResult = array();
+    $qryResult['status'] = 1;
+    $qryResult['msg'] = "Failed";
+    echo json_encode($qryResult);
+    return;
+  }
+   echo json_encode($qryResult);
+      return;
+}
+// 
+/*
+if ((isset($_REQUEST['zproflag']))&&($_REQUEST['zproflag']==71110))
+{
+  try
+  {
+	unset($_SESSION["isLogin"]);
 	  $qryResult = array();
       $qryResult['status'] = 1;
       $qryResult['msg'] = "Invalid login credentials";
@@ -55,7 +239,7 @@ if ((isset($_REQUEST['zproflag']))&&($_REQUEST['zproflag']==710))
 					$_SESSION["useridref"]=$row1[0];
 				}
 			}
-			*/
+			
 	}
      echo json_encode($qryResult);
       return;
@@ -563,6 +747,7 @@ if ((isset($_REQUEST['zproflag']))&&($_REQUEST['zproflag']==893641))
 		return;
   }
 }
+*/
 $conn = null;
 ?>
 

@@ -119,16 +119,16 @@ body {
     var password = $('#password').val();
     if (username === '') {  $('#username').css("border", "2px solid red"); ferror=1}
     if (password === '') {  $('#password').css("border", "2px solid red"); ferror=1}
-	var regex = /^(0|[1-9][0-9]*)$/;
-    var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+	//var regex = /^(0|[1-9][0-9]*)$/;
+    //var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 	var msg="";
-	if(!(username.match(mailformat)))
+	if((username.length==0))
     {
       ferror=1;
       $('#username').css("border", "1px solid red");
 	  msg="Enter valid email";
     }
-	if(password.length!=8)
+	if(password.length==0)
     {
       ferror=1;
       $('#password').css("border", "1px solid red");
@@ -154,14 +154,14 @@ body {
           type : 'POST',
           data : {
               'username' : username,
-              'password' : pwdformat,
+              'password' : password,
               'zproflag' : 710
           },
           dataType:'json',
           success : function(data) {
               if (data['status']==0)
               {
-                 window.location.replace("admin.php");
+                 window.location.replace("search.php");
               }
 			  else if (data['status']==99)
 			  {
