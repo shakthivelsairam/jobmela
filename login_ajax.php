@@ -188,7 +188,7 @@ if ((isset($_REQUEST['zproflag']))&&($_REQUEST['zproflag']==4400112))
   catch(PDOException $e) {
     $qryResult = array();
     $qryResult['status'] = 1;
-    $qryResult['msg'] = "Failed";
+    $qryResult['msg'] = "Failed".$e;
     echo json_encode($qryResult);
     return;
   }

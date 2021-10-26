@@ -2,7 +2,7 @@
 $servername = "localhost";
 $username = "sakthi";
 $password = "Admin";
-$database = "empinfo";
+$database = "job1016";
 // #$servername = "localhost";
 // $username = "root";
 // $password = "admin";
